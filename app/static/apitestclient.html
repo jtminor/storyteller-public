@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Storyteller v3 API Documentation and Test Client</title>
+    <style>
+        body {
+            font-family: monospace;
+            margin: 5%;
+            background:lightgrey;
+        }
+        th,td {
+            padding:5px;
+            text-align: left;
+            border: 1px solid darkgrey;
+            font-weight: light;
+        }
+        
+        table {
+            table-layout: fixed;
+            border-collapse: collapse;
+            width: 100%;
+            text-align: left;
+            background-color:white;
+        }
+
+        .panel {
+            background-color: white;
+            border: 3px solid black;
+            border-radius: 3px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .section {
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        video {
+            width: 100%;
+            height: auto;
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+        audio {
+            width: 100%;
+        }
+
+    </style>
+    <script>
+        function testApi(doc_id) {
+            const testKey = document.getElementById('testKey').value;
+            const url = `/${doc_id}/test?test_content_id=${testKey}`;
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('testResult').innerText = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function updateContent(doc_id) {
+            const contentId = document.getElementById('contentId').value;
+            const contentData = document.getElementById('contentData').value;
+            const mediaFile = document.getElementById('mediaFile').files[0];
+
+            const formData = new FormData();
+            formData.append(contentId, contentData);
+
+        // Check if an image file is selected
+            if (mediaFile) {
+                // Read the image file as base64 data
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    formData.set(contentId, reader.result); // Update FormData with base64 data
+
+                    // Now send the request
+                    fetch(`/${doc_id}/updatecontent`, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('updateResult').innerText = data;
+                         document.getElementById('mediaFile').value = '';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+                reader.readAsDataURL(mediaFile);
+            } else {
+                // If no image file is selected, send the request with text data
+                fetch(`/${doc_id}/updatecontent`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('updateResult').innerText = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+          }
+    function getContent(doc_id) {
+        const contentIds = document.getElementById('getContentIds').value.split(',');
+        const url = `/${doc_id}/getcontent?content_ids=${contentIds.join(',')}`;
+
+        fetch(url, {
+            method: 'GET',
+        })
+        .then(response => {
+            // Check if the response is OK (status code 200-299)
+            if (!response.ok) {
+            // If not OK, assume it's an error and try to parse as text
+            return response.text().then(text => Promise.reject(text)); 
+            } else {
+            // If OK, parse as JSON
+            return response.json(); 
+            }
+        })
+        .then(data => {
+            // Handle successful JSON response
+            document.getElementById('getContentResult').innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            // Handle errors, whether they are JSON or text
+            document.getElementById('getContentResult').innerText = 'Error: ' + error; 
+        });
+        }
+
+function getContentState(doc_id) {
+    const contentId = document.getElementById('getContentStateId').value;
+    const url = `/${doc_id}/getcontentstate?content_id=${contentId}`;
+
+    fetch(url, { method: 'GET' })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => Promise.reject(text));
+            }
+            return response.text(); // The API returns a string, not JSON
+        })
+        .then(data => {
+            document.getElementById('getContentStateResult').innerText = data;
+        })
+        .catch(error => {
+            document.getElementById('getContentStateResult').innerText = 'Error: ' + error;
+        });
+}
+
+    
+    
+    function setContentState(doc_id) {
+        const contentId = document.getElementById('setContentStateId').value;
+        const newState = document.getElementById('setContentNewState').value;
+        const url = `/${doc_id}/setcontentstate?content_id=${contentId}&new_state=${newState}`;
+    
+        fetch(url, {
+            method: 'POST',
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => Promise.reject(text));
+            } else {
+                return response.text();  // Or response.json() if you expect JSON
+            }
+        })
+        .then(data => {
+            document.getElementById('setContentStateResult').innerText = data;
+        })
+        .catch(error => {
+            document.getElementById('setContentStateResult').innerText = 'Error:' + error;
+        });
+    }
+    
+    
+
+
+
+
+            
+        function generateContent(doc_id) {
+            const contentIds = document.getElementById('contentIds').value.split(',');
+
+            fetch(`/${doc_id}/generatecontent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(contentIds)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('generateResult').innerText = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function indexContent(doc_id) {
+            const url = `/${doc_id}/indexcontent`;
+
+            fetch(url, {
+                method: 'GET', 
+            })
+                .then(response => response.json())
+                .then(data => {
+                    indeconsole = document.getElementById('contentindexconsole');
+                    indeconsole.innerHTML = '';
+
+                    data.forEach(item => {
+                        addToIndexConsole(item.type, item.data, item.id); 
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('indexContentResult').innerText = 'Error: ' + error.message;
+                });
+        }
+
+        function addToIndexConsole(type, description, id) {
+            indeconsole = document.getElementById('contentindexconsole');
+
+			const event_num = indeconsole.rows.length;
+			let newRow = indeconsole.insertRow(-1);
+
+            //Type - the kind of media, such as txt or img
+            let typeCell = newRow.insertCell(0);
+            typeCell.textContent = type;
+        
+            //Content Id - the key shared by the platform and UI, also called a Semantic ID or Event ID
+            let idCell = newRow.insertCell(1);
+            idCell.textContent = id;
+
+            //Description - a short human readable description of the content
+            let descriptionCell = newRow.insertCell(2);
+            descriptionCell.textContent = description;
+
+
+        }
+        function streamContent(doc_id) {
+
+				// In order to get the content you will need to listen to the content events stream by creating an EventSource object from this endpoint:
+				// 
+				// GET /streamcontent
+				// 
+				// EventSource is a standard polling API available in all modern browsers, for more see: https://developer.mozilla.org/en-US/docs/Web/API/EventSource
+				// NOTE that the standard uses the property "event.lastEventId" for the "event id" data, which we use for the "content id") so "lastEventId" is "Event Id" in the Standard and "Content Id" in our platform.
+				
+				event_source = new EventSource(`/${doc_id}/streamcontent`);
+				
+
+
+				// You’ll need to then add eventListeners to this EventSource and handle the incoming content and place it in the ui, store it locally, or ignore it. 
+				//In this example all content is just added to the table, in a real client, each handler would deal with the content based on its type and ID as needed.  
+
+				//Add (append) content to the existing content with this content id
+				event_source.addEventListener("ADD", function (event) {
+					addEventToConsole(event);
+				});
+
+				//Replace the content with new content
+				event_source.addEventListener("REPLACE",function (event) {
+					addEventToConsole(event);	
+				});
+
+				//Add (append to list) a new content item to an existing list item
+				event_source.addEventListener("NEW", function (event) {
+					addEventToConsole(event);
+				});
+
+				//The generator is done with the requested content
+				event_source.addEventListener("END", function (event) {
+					addEventToConsole(event);
+				});
+
+				//There was an error related to this content
+				//The data may contain a string with with error codes or user information.
+				event_source.addEventListener("ERROR", function (event) {
+					addEventToConsole(event);
+				});	
+				
+			}
+
+
+        function addEventToConsole(event) {
+			const event_num = streamconsole.rows.length;
+			let newRow = streamconsole.insertRow(-1);
+				
+            //Events have three fields
+            //Type - the kind of event (NOT the kind of media), such as NEW or ERROR
+            let typeCell = newRow.insertCell(0);
+            typeCell.textContent = event.type;
+        
+            //Content Id - the key shared by the platform and UI, also called a Semantic ID or Event ID
+            // NOTE that the standard uses the name "event.lastEventId"		
+            let idCell = newRow.insertCell(1);
+            idCell.textContent = event.lastEventId;
+
+            //Data - the data to be added to the UI, in the form of a string (for txt data) or a url (for img or other media data)
+            let dataCell = newRow.insertCell(2);
+					// Check if the data is a URL
+            if (isValidUrl(event.data)) {
+                // Determine the media type based on the URL extension
+                const mediaType = getMediaTypeFromUrl(event.data);
+
+                // Create the appropriate media element
+                switch (mediaType) {
+                    case 'image':
+                        let imgElement = document.createElement('img');
+                        imgElement.src = event.data;
+                        imgElement.style.maxWidth = '100px'; // Optional: Set max width for images
+                        dataCell.appendChild(imgElement);
+                        break;
+                    case 'audio':
+                        let audioElement = document.createElement('audio');
+                        audioElement.src = event.data;
+                        audioElement.controls = true;
+                        dataCell.appendChild(audioElement);
+                        break;
+                    case 'video':
+                        let videoElement = document.createElement('video');
+                        videoElement.src = event.data;
+                        videoElement.controls = true;
+                        dataCell.appendChild(videoElement);
+                        break;
+                    default:
+                        // If the media type is not recognized, display the URL as text
+                        dataCell.textContent = event.data;
+                }
+            } else {
+                // If the data is not a URL, display it as text
+                dataCell.textContent = event.data;
+            }
+
+            // Helper function to check if a string is a valid URL
+            function isValidUrl(string) {
+                try {
+                    new URL(string);
+                    return true;
+                } catch (_) {
+                    return false;  
+                }
+            }
+
+            // Helper function to get the media type from a URL
+            function getMediaTypeFromUrl(url) {
+                const extension = url.split('.').pop().toLowerCase();
+                switch (extension) {
+                    case 'png':
+                    case 'jpg':
+                    case 'jpeg':
+                    case 'gif':
+                        return 'image';
+                    case 'mp3':
+                    case 'wav':
+                    case 'ogg':
+                        return 'audio';
+                    case 'mp4':
+                    case 'webm':
+                        return 'video';
+                    default:
+                        return 'unknown';
+                }
+            }
+		}
+
+        function formatContent(doc_id) {
+            const formatData = document.getElementById('formatData').value;
+
+            fetch(`/${doc_id}/formatcontent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formatData)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('formatResult').innerText = data;
+                    
+                    indexContent(doc_id); // Refresh the index after formatting
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function sortTable(tableId, columnIndex) {
+            const table = document.getElementById(tableId);
+            const rows = Array.from(table.rows).slice(1); // Get rows, excluding the header
+            let ascending = table.getAttribute("data-sort-asc") !== "true";
+            table.setAttribute("data-sort-asc", ascending);
+
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[columnIndex].innerText;
+                const cellB = rowB.cells[columnIndex].innerText;
+                
+                // Check if content is numeric
+                const a = isNaN(cellA) ? cellA : parseFloat(cellA);
+                const b = isNaN(cellB) ? cellB : parseFloat(cellB);
+                
+                return (a > b ? 1 : -1) * (ascending ? 1 : -1);
+            });
+
+            // Reattach sorted rows to table body
+            rows.forEach(row => table.tBodies[0].appendChild(row));
+        }
+
+        function deleteDocument(doc_id) {
+            const url = `/${doc_id}/delete`;
+
+            fetch(url, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => Promise.reject(text));
+                }
+                return response.text(); 
+            })
+            .then(data => {
+                document.getElementById('deleteResult').innerText = data;  // Display success message
+            })
+            .catch(error => {
+                document.getElementById('deleteResult').innerText = 'Error: ' + error; // Display error message
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Storyteller API Test Client</h1>
+
+    <div class="panel">
+        <h2>REST API Documentation</h2>
+    
+        <div class="section">
+            <h3>/</h3>
+            <p>
+                <strong>Method:</strong> GET<br>
+                <strong>Description:</strong> Returns a string indicating that the Storyteller API is live.<br>
+                <strong>Response:</strong><br>
+                <code>Storyteller is live.</code>
+            </p>
+        </div>
+    
+        <div class="section">
+            <h3>/&lt;doc_id&gt;/updatecontent</h3>
+            <p>
+                <strong>Method:</strong> POST<br>
+                <strong>Description:</strong> Updates the content of the specified document with the posted values.<br>
+                <strong>Parameters:</strong><br>
+                <ul>
+                    <li><strong>doc_id (string, required):</strong> The ID of the document to update.</li>
+                    <li><strong>FormData (object, required):</strong> The FormData of the post should contain a mapping of the Content ID (key) to its new value.  If the value is a file, it should be encoded as base64 within the FormData.</li>
+                </ul>
+                <strong>Response:</strong><br>
+                <code>True</code>  (or an appropriate success message)
+            </p>
+        </div>
+    
+        <div class="section">
+            <h3>/&lt;doc_id&gt;/getcontent</h3>
+            <p>
+                <strong>Method:</strong> GET<br>
+                <strong>Description:</strong> Gets the content of the specified document.<br>
+                <strong>Parameters:</strong><br>
+                <ul>
+                    <li><strong>doc_id (string, required):</strong> The ID of the document to get content from.</li>
+                    <li><strong>content_ids (string, optional):</strong> A comma-separated list of content IDs to get. If omitted, all content is returned.</li>
+                </ul>
+                <strong>Response:</strong><br>
+                A JSON encoded list of Content Objects:<br>
+                <code>
+                    [
+                        {"data": "test.value", "id": "test.id", "type": "txt"}, 
+                        {...} 
+                    ]
+                </code>
+            </p>
+        </div>
+    
+        <div class="section">
+            <h3>/&lt;doc_id&gt;/generatecontent</h3>
+            <p>
+                <strong>Method:</strong> POST<br>
+                <strong>Description:</strong> Generates the requested content IDs for the specified document and publishes them to the stream.<br>
+                <strong>Parameters:</strong><br>
+                <ul>
+                    <li><strong>doc_id (string, required):</strong> The ID of the document to generate content for.</li>
+                </ul>
+                <strong>Request Body (JSON):</strong><br>
+                An array of content IDs to generate:<br>
+                <code>
+                    ["content_id_1", "content_id_2"]
+                </code>
+                <strong>Response:</strong><br>
+                <code>True</code> (or an appropriate success message)
+            </p>
+        </div>
+    
+        <div class="section">
+            <h3>/&lt;doc_id&gt;/indexcontent</h3>
+            <p>
+                <strong>Method:</strong> GET<br>
+                <strong>Description:</strong> Gets an index of all content IDs, their types, and short descriptions from the specified document.<br>
+                <strong>Parameters:</strong><br>
+                <ul>
+                    <li><strong>doc_id (string, required):</strong> The ID of the document.</li>
+                </ul>
+                <strong>Response (JSON):</strong><br>
+                <code>
+                    [
+                        {"data": "Description 1", "id": "content.id.1", "type": "txt"},
+                        {"data": "Description 2", "id": "content.id.2", "type": "img"}, 
+                        {...}
+                    ]
+                </code>
+            </p>
+        </div>
+    
+        <div class="section">
+            <h3>/&lt;doc_id&gt;/formatcontent</h3>
+            <p>
+                <strong>Method:</strong> POST<br>
+                <strong>Description:</strong> Formats the content of the specified document using the provided format name.<br>
+                <strong>Parameters:</strong><br>
+                <ul>
+                    <li><strong>doc_id (string, required):</strong> The ID of the document.</li>
+                </ul>
+                <strong>Request Body (JSON string):</strong><br> The full name of the format to use (e.g., "test.0.0.2")<br>
+                <strong>Response:</strong><br>
+                <code>Content formatted successfully.</code> (or an appropriate success message)
+            </p>
+        </div>
+    
+        <div class="section">
+            <h3>/&lt;doc_id&gt;/streamcontent</h3>
+            <p>
+                <strong>Method:</strong> GET<br>
+                <strong>Description:</strong> Streams content events for the specified document using Server-Sent Events (SSE).<br>
+                <strong>Parameters:</strong><br>
+                <ul>
+                    <li><strong>doc_id (string, required):</strong> The ID of the document.</li>
+                </ul>
+                <strong>Response (SSE Stream):</strong><br>
+                Events with `event`, `retry` (optional), `data`, and `id` fields.  The `id` field corresponds to the `lastEventId` property in the browser's EventSource API.
+                <br>
+                <strong>Event Types:</strong>
+                <ul>
+                    <li><strong>ADD:</strong> Add content to existing content ID.</li>
+                    <li><strong>REPLACE:</strong> Replace content for content ID.</li>
+                    <li><strong>RESTATE:</strong> The state of the content has changed (the data field will be the new state).</li>
+                    <li><strong>NEW:</strong> Add new content item to a list.</li>
+                    <li><strong>END:</strong> Content generation complete.</li>
+                    <li><strong>ERROR:</strong> An error occurred. Data field may contain details.</li>
+                    <li><strong>WAIT:</strong> Server is waiting (can be used for client-side progress indication).</li> </ul>
+            </p>
+        </div>
+    
+    
+        <div class="section">  <h3>/&lt;doc_id&gt;/getcontentstate?content_id=&lt;content_id&gt;</h3>
+            <p>
+                <strong>Method:</strong> GET<br>
+                <strong>Description:</strong> Gets the state of a specific content ID within the document.
+                <strong>Parameters:</strong><br>
+                <ul>
+                    <li><strong>doc_id (string, required):</strong> The ID of the document.</li>
+                    <li><strong>content_id (string, required):</strong> The ID of the content item to check.</li>
+    
+                </ul>
+                <strong>Response:</strong> The current state of the content ID as a string (e.g., "none", "needed", "generating", "done").
+            </p>
+        </div>
+    
+<div class="section">
+    <h3>/&lt;doc_id&gt;/setcontentstate</h3>
+    <p>
+        <strong>Method:</strong> POST<br>
+        <strong>Description:</strong> Sets the state of a specific content ID within the document.<br>
+        <strong>Parameters:</strong><br>
+        <ul>
+            <li><strong>doc_id (string, required):</strong> The ID of the document (part of the URL path).</li>
+        </ul>
+        <strong>Request Body (JSON):</strong><br>
+        ```json
+        {
+            "content_id": "content_id_to_set",
+            "state": "new_state_value" 
+        }
+        ```
+        <strong>Response:</strong> Success message or error information.
+    </p>
+</div>
+
+    
+    <div class="section">
+        <h3>/&lt;doc_id&gt;/delete</h3>
+        <p>
+            <strong>Method:</strong> DELETE<br>
+            <strong>Description:</strong> Deletes the specified document, including associated content and agent data.<br>
+            <strong>Parameters:</strong><br>
+            <ul>
+                <li><strong>doc_id (string, required):</strong> The ID of the document to delete.</li>
+            </ul>
+            <strong>Response:</strong><br>
+            <code>Document '{doc_id}' deleted successfully.</code> (or an appropriate success message)<br>
+            <strong>Error Responses:</strong><br>
+            <ul>
+                <li>400 Bad Request: If 'doc_id' is missing.</li>
+                <li>404 Not Found: If the document does not exist.</li>
+                <li>500 Internal Server Error: If an unexpected error occurs during deletion.</li>
+            </ul>
+        </p>
+    </div>
+    
+    
+    
+    </div>
+    
+
+<div class="panel">
+<h2>Test Client</h2>
+    <label for="doc_id">Test Document ID:</label>
+    <input type="text" id="doc_id" value="test_doc"><br>
+
+    <div class="section">
+        <h3>Delete Document</h3>
+        <button onclick="deleteDocument(document.getElementById('doc_id').value)">Delete Document</button>
+        <p id="deleteResult"></p>
+    </div>
+    
+
+    <div class="section">
+        <h3>Format Content</h3>
+        <label for="formatData">Format name:</label><br>
+        <input type="text" id="formatData"] value="test.0.0.2"></input><br>
+        <button onclick="formatContent(document.getElementById('doc_id').value)">Format Content</button>
+        <p id="formatResult"></p>
+    </div>
+
+    
+<div class="section">
+    <h3>Update Content</h3>
+    <label for="contentId">Content ID:</label>
+    <input type="text" id="contentId" value="test.id"><br>
+    <label for="contentData">Content Data:</label>
+    <input type="text" id="contentData" value="test.value"><br>
+    <input type="file" id="mediaFile" accept="image/png, image/jpeg, image/gif, audio/mpeg, audio/mp3, audio/wav, audio/ogg, video/mp4, video/webm"><br>
+
+    <button onclick="updateContent(document.getElementById('doc_id').value)">Update Content</button>
+    <p id="updateResult"></p>
+</div>
+<div class="section">
+    <h3>Generate Content</h3>
+    <label for="contentIds">Content IDs (comma-separated list):</label>
+    <input type="text" id="contentIds" value="test"><br>
+    <button onclick="generateContent(document.getElementById('doc_id').value)">Generate Content</button>
+    <p id="generateResult"></p>
+</div>
+
+<div class="section">
+    <h3>Get Content</h3>
+    <label for="getContentIds">Content IDs (comma-separated list):</label>
+    <input type="text" id="getContentIds" value="test.id"><br>
+    <button onclick="getContent(document.getElementById('doc_id').value)">Get Content</button>
+    <p id="getContentResult"></p>
+</div>
+
+<div class="section">
+    <h3>Get Content State</h3>
+    Content ID: <input type="text" id="getContentStateId" value="content_id_to_check"><br>
+    <button onclick="getContentState(document.getElementById('doc_id').value)">Get Content State</button>
+    <p id="getContentStateResult"></p>
+</div>
+
+<div class="section">
+    <h3>Set Content State</h3>
+    Content ID: <input type="text" id="setContentStateId" value="content_id_to_set"><br>
+    New State: <input type="text" id="setContentNewState" value="done"><br>
+    <button onclick="setContentState(document.getElementById('doc_id').value)">Set Content State</button>
+    <p id="setContentStateResult"></p>
+</div>
+
+<div class="section">
+    <h3>Index Content</h3>
+    <button onclick="indexContent(document.getElementById('doc_id').value)">Index Content</button>
+    <p id="indexContentResult">    
+        <table id="contentindexconsole">
+        <tr>
+            <th>Media Type</th>
+            <th>Id</th>
+            <th>Description</th>
+        </tr>
+        </table>
+    </p>
+</div>
+
+<div class="section">
+    <h3>Stream Content</h3>
+    <button onclick="streamContent(document.getElementById('doc_id').value)">Start Streaming</button>
+    <div id="streamedContent"></div>
+    <p id="streamResult">Event Stream:</p>
+
+    <table id="streamconsole">
+        <tr>
+            <th onclick="sortTable('streamconsole', 0)" >Event Type</th>
+            <th onclick="sortTable('streamconsole', 1)">Id</th>
+            <th onclick="sortTable('streamconsole', 2)">Data</th>
+        </tr>
+    </table>
+    </div>
+    </div>
+</body>
+</html>
+ 

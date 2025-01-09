@@ -1,0 +1,215 @@
+{
+  "DISPLAY_NAME": "Extened Test Format",
+  "DESC": "A format for testing all media types and service providers.",
+  "AGENTS": {
+    "test" : {
+      "DESC": "All possible test content.",
+      "DATA": "",
+      "TYPE": "set",
+      "STATE": "done",
+      "PROMPTS": ["§test.preset§","§test.genset§"],
+      "MEMORIES": []
+    },
+    "test.preset" :{
+      "DESC": "Test content which doesn't require generation.",
+      "DATA": "",
+      "TYPE": "set",
+      "STATE": "done",
+      "PROMPTS": ["§test.id§","§test.location§","§test.image§","§test.audio§","§test.video§"],
+      "MEMORIES": []
+    },
+    "test.id": {
+      "DESC": "A test key.",
+      "DATA": "test.value",
+      "TYPE": "txt",
+      "STATE": "done",
+      "PROMPTS": [],
+      "MEMORIES": []
+    },
+    "test.location": {
+        "DESC": "A test location.",
+        "DATA": "37.773972,-122.431297",
+        "TYPE": "loc",
+        "STATE": "done",
+        "PROMPTS": ["Pick a location based on: §test.id§"],
+        "MEMORIES": []
+    },
+    "test.video": {
+      "DESC": "A test video.",
+      "DATA": "https://storage.googleapis.com/storyteller-media/ZmPIYCBe.mp4",
+      "TYPE": "video",
+      "STATE": "done",
+      "PROMPTS": ["§test.id§","§test.audio§","§test.image"],
+      "MEMORIES": []
+    },
+    "test.audio": {
+        "DESC": "A test audio.",
+        "DATA": "https://storage.googleapis.com/storyteller-media/test.audio.mp3",
+        "TYPE": "audio",
+        "STATE": "done",
+        "PROMPTS": ["§test.id§"],
+        "MEMORIES": []
+    },
+    "test.image" : {
+      "DESC": "A test image.",
+      "DATA": "https://storage.googleapis.com/storyteller-media/PtkRUJoA.png",
+      "TYPE": "img",
+      "STATE": "done",
+      "PROMPTS": ["Draw an image inspired by: §test.id§"],
+      "MEMORIES": []
+    },
+    "test.genset" : {
+        "DESC": "A set of content used to test generation and content state functionality.",
+        "DATA": "",
+        "TYPE":"set",
+        "STATE":"needed",
+        "PROMPTS":["§test.genset.txt§","§test.genset.loc§","§test.genset.img§","§test.genset.audio§","§test.genset.video§"],
+        "MEMORIES":[]
+    },
+    "test.genset.txt": {
+      "DESC": "A test key.",
+      "DATA": "test.value",
+      "TYPE": "txt",
+      "STATE": "needed",
+      "PROMPTS": ["Pick a random crayon color."],
+      "SYSTEM": "You are a bot that responds with random crayon colors. Pick something surpising. Tell me single word for the crayon color name. DO NOT tell me other information or provide any explation.",
+      "MEMORIES": []
+    },
+    "test.genset.loc": {
+        "DESC": "A test location.",
+        "DATA": "",
+        "TYPE": "loc",
+        "STATE": "needed",
+        "PROMPTS": ["What are the GPS coordinates for a place associated with §test.genset.txt§?"],
+        "MEMORIES": []
+    },
+    "test.genset.img" : {
+      "DESC":"A test of text to image tranformation, using the value of test.gen.text as a prompt to create an image.",
+      "DATA":"",
+      "TYPE":"img",
+      "STATE":"needed",
+      "PROMPTS":["Please draw an inspirational, detailed piece of 90's vibe pop art whose theme and prominent color is: §test.genset.txt§ and includes images related to this location: §test.genset.loc§."],
+      "MEMORIES":[]
+    },
+    "test.genset.audio": {
+      "DESC": "A test of text-to-speech tranformation, using the value of test.id as a prompt to create the test audio.",
+      "DATA": "",
+      "TYPE":"audio",
+      "STATE":"needed",
+      "PROMPTS":["§test.genset.txt§"],
+      "MEMORIES":[]
+    },
+    "test.genset.video": {
+      "DESC": "A test video.",
+      "DATA": "test.genset.txt,test.genset.img,test.genset.audio",
+      "TYPE": "video",
+      "STATE": "needed",
+      "PROMPTS": [
+        "§test.genset.txt§",
+        "§test.genset.img§",
+        "§test.genset.audio§"
+      ],
+      "MEMORIES": []
+    },
+    "test.openaiset" :
+    {
+        "DESC": "A set of content used to test openai generation and content state functionality.",
+        "DATA": "",
+        "TYPE":"set",
+        "STATE":"needed",
+        "PROMPTS":["§test.openai.text§","§test.openai.image§","§test.openai.audio§"],
+        "MEMORIES":[]
+
+    },
+    "test.openai.text" : {
+      "DESC": "A test of openai text generation.",
+      "DATA": "",
+      "TYPE": "txt",
+      "STATE": "needed",
+      "PROMPTS": ["Write a short story about a cat."],
+      "MEMORIES": [],
+      "MODEL" : "openai-text-basic"
+    },
+    "test.openai.image" : {
+      "DESC": "A test of openai image generation.",
+      "DATA": "",
+      "TYPE": "img",
+      "STATE": "needed",
+      "PROMPTS": ["Draw an image of a cat."],
+      "MEMORIES": [],
+      "MODEL" : "openai-image-basic"
+    },
+    "test.openai.audio" : {
+      "DESC": "A test of openai audio generation.",
+      "DATA": "",
+      "TYPE": "audio",
+      "STATE": "needed",
+      "PROMPTS": ["Generate an audio clip of a cat."],
+      "MEMORIES": [],
+      "MODEL" : "openai-speech-basic"
+    },
+    "test.testproviderset" : {
+        "DESC": "A set of content used to test testprovider generation and content state functionality.",
+        "DATA": "",
+        "TYPE":"set",
+        "STATE":"needed",
+        "PROMPTS":["§test.testprovider.text§","§test.testprovider.image§","§test.testprovider.audio§","§test.testprovider.location§","§test.testprovider.video§"],
+        "MEMORIES":[]
+    },
+    "test.testprovider.text" : {
+      "DESC": "A test of testprovider text generation.",
+      "DATA": "",
+      "TYPE": "txt",
+      "STATE": "needed",
+      "PROMPTS": ["Write a short story about a dog."],
+      "MEMORIES": [],
+      "MODEL" : "test"
+    },
+    "test.testprovider.image" : {
+      "DESC": "A test of testprovider image generation.",
+      "DATA": "",
+      "TYPE": "img",
+      "STATE": "needed",
+      "PROMPTS": ["Draw an image of a dog."],
+      "MEMORIES": [],
+      "MODEL" : "test"
+    },
+    "test.testprovider.audio" : {
+      "DESC": "A test of testprovider audio generation.",
+      "DATA": "",
+      "TYPE": "audio",
+      "STATE": "needed",
+      "PROMPTS": ["Generate an audio clip of a dog."],
+      "MEMORIES": [],
+      "MODEL" : "test"  
+  },
+    "test.testprovider.location" : {
+      "DESC": "A test of testprovider location generation.",
+      "DATA": "",
+      "TYPE": "loc",
+      "STATE": "needed",
+      "PROMPTS": ["Pick a location."],
+      "MEMORIES": [],
+      "MODEL" : "test" 
+  },
+    "test.testprovider.video" : {
+      "DESC": "A test of testprovider video generation.",
+      "DATA": "",
+      "TYPE": "video",
+      "STATE": "needed",
+      "PROMPTS": ["§test.testprovider.text","§test.testprovider.audio§","§test.testprovider.image"],
+      "MEMORIES": [],
+      "MODEL" : "test"
+    },
+    "test.ollama.txt" : {
+      "DESC": "A test of ollama text generation.",
+      "DATA": "",
+      "TYPE": "txt",
+      "STATE": "needed",
+      "PROMPTS": ["Write a short story about a bird."],
+      "MEMORIES": [],
+      "MODEL" : "ollama-text-basic"
+    }
+
+  }
+}

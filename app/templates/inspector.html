@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.21.2/dist/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+    <script src="https://unpkg.com/klayjs@0.4.1/klay.js"></script>
+    <script src="https://unpkg.com/cytoscape-klay/cytoscape-klay.js"></script>
+
+    <title>Storyteller Document Inspector</title>
+    <style>
+        body {
+            font-family: monospace;
+            margin: 5%;
+            background:lightgrey;
+        }
+        th,td {
+            padding:5px;
+            text-align: left;
+            border: 2px solid darkgrey;
+            font-weight: light;
+            word-wrap: break-word;
+            overflow: scroll;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: left;
+            table-layout: fixed ;
+            background-color:white;
+        }
+
+        
+
+        #formatTable th:nth-child(1) { width: 15%; } /* Content ID */
+        #formatTable th:nth-child(2) { width: 20%; } /* Description */
+        #formatTable th:nth-child(3) { width: 15%; } /* Initial Value */
+        #formatTable th:nth-child(4) { width: 5%; } /* Initial State */
+        #formatTable th:nth-child(5) { width: 33%; } /* Prompts */
+        #formatTable th:nth-child(6) { width: 5%; } /* Media Type */
+        #formatTable th:nth-child(7) { width: 7%; } /* Actions */
+
+        #storyTable th:nth-child(1) { width: 15%; } /* Content ID */
+        #storyTable th:nth-child(2) { width: 50%; } /* Data */
+        #storyTable th:nth-child(3) { width: 10%; } /* State */
+        #storyTable tr:nth-child(4) { width: 30%; } /* Actions */
+ 
+        #storyTable input[type="text"] {
+            width: 100%;
+            resize: both;
+            box-sizing: border-box;
+        }
+        #storyTable textarea {
+            width: 100%;
+            height: 1.5em; 
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        #storyTable select {
+            padding: 5px;
+            border: 1px solid darkgrey;
+        }
+        .panel {
+            background-color: white;
+            border: 3px solid black;
+            border-radius: 3px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .section {
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        video {
+            width: 100%;
+            height: auto;
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+        audio {
+            width: 100%;
+        }
+
+        #format-graph {
+            width: 100%;
+            height: 600px;
+        }
+
+       .flash-generating-animation { /* Style the entire row */
+             animation: pulse 1s infinite ease-in-out; 
+        }
+        @keyframes pulse {
+            0% { background-color: inherit; } /* Start with the default background */
+             50% { background-color: darkgrey; } /* Flash color */
+             100% { background-color: inherit; } /* Back to default */
+        }
+        .flash-update-animation {
+                  animation: flashRowSuccess 0.5s ease-in-out; /* Apply animation (0.5s duration) */
+        }
+        @keyframes flashRowSuccess {
+             0% { background-color: inherit; } /* Start with the default background */
+             50% { background-color: lightblue; } /* Flash color */
+             100% { background-color: inherit; } /* Back to default */
+        }
+        .flash-error-animation {
+                  animation: flashRowError 0.5s ease-in-out;
+        }
+        @keyframes flashRowError {
+             0% { background-color: inherit; } /* Start with the default background */
+             50% { background-color: lightcoral; } /* Flash color */
+             100% { background-color: inherit; } /* Back to default */
+        }
+    </style>
+    <script>
+        let cy;
+    
+        // Function to update content 
+        function updateContent(docId, contentId) {
+            const contentDataInput = document.getElementById(`contentData-${contentId}`);
+            const mediaFile = document.getElementById(`mediaFile-${contentId}`).files[0];
+
+            const formData = new FormData();
+
+            // Check if a file is selected
+            if (mediaFile) {
+                // Read the file as base64 data
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    formData.append(contentId, reader.result);
+                    sendUpdateRequest(docId, formData);
+                }
+                reader.readAsDataURL(mediaFile);
+            } else {
+                // If no file is selected, send the text data
+                formData.append(contentId, contentDataInput.value);
+                sendUpdateRequest(docId, formData);
+            }
+        }
+
+        // Helper function to send the update request
+        function sendUpdateRequest(docId, formData) {
+            fetch(`/${docId}/updatecontent`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Content updated:', data);
+            })
+            .catch(error => {
+                console.error('Error updating content:', error);
+            });
+        }
+
+        // Function to generate content
+        function generateContent(docId, contentId) {
+            fetch(`/${docId}/generatecontent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([contentId]) 
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Content generation requested:', data); // Log success to console
+            })
+            .catch(error => {
+                console.error('Error requesting content generation:', error);
+            });
+        }
+
+        // Function to handle incoming content events
+        function handleContentEvent(event) {
+            const contentId = event.lastEventId;
+            const contentData = event.data;
+
+            switch (event.type) {
+                case 'NEW':
+                     appendStoryTableData(contentId, contentData);
+                     break;
+                case 'REPLACE':
+                    // Create a new row or update an existing row in the Story Table
+                    updateStoryTableRow(contentId, contentData);
+                    break;
+                case 'ADD':
+                    // Append content to an existing row in the Story Table
+                    appendStoryTableData(contentId, contentData);
+                    break;
+                case 'ERROR':
+                    // Add error message to the Story Table
+                    addStoryTableError(contentId, contentData);
+                    break;
+                case 'RESTATE':
+                    updateStoryTableRowState(contentId, contentData);
+                    updateNodeColor(contentId, contentData);
+                    break;
+                default:
+                    console.log('Unhandled event type:', event.type);
+            }
+        }
+
+        // Function to update or create a row in the Story Table
+        function updateStoryTableRow(contentId, contentData) {
+            const storyTable = document.getElementById('storyTableBody');
+            let row = document.getElementById(`storyRow-${contentId}`);
+            
+            if (!row) {
+                console.log('Adding new content row:', contentId);
+                // Create a new row
+                row = storyTable.insertRow();
+                row.id = `storyRow-${contentId}`;
+
+                row_type = getMediaTypeForContentId(contentId);
+
+
+                // Add Content ID cell
+                const contentIdCell = row.insertCell();
+                contentIdCell.textContent = contentId;
+
+                // Add Content Data cell (editable)
+                const contentDataCell = row.insertCell();
+                const contentDataInput = document.createElement('textarea');
+                if (row_type == "set") {
+                    contentDataInput.disabled = true;
+                    contentDataInput.value = '';
+                } else {
+                    contentDataInput.value = contentData;
+                }
+                contentDataInput.id = `contentData-${contentId}`;
+                contentDataCell.appendChild(contentDataInput);
+
+                // Add State Select
+                const stateSelectCell = row.insertCell();
+                const stateSelect = document.createElement('select');
+                stateSelect.id = `contentState-${contentId}`;
+                stateSelect.innerHTML = `
+                    <option value="none">None</option>
+                    <option value="done">Done</option>
+                    <option value="invalid">Invalid</option>
+                    <option value="needed">Needed</option>
+                    <option value="generating">Generating</option>
+                    <option value="locked">Locked</option>
+                `;
+                stateSelect.onchange = () => setContentState('{{ story_id }}', contentId);
+                stateSelectCell.appendChild(stateSelect);
+            
+                fetchAndSetContentState('{{ story_id }}', contentId);
+
+                // Add Actions cell
+                const actionsCell = row.insertCell();
+
+                if (row_type == "set") {
+                    const generateButton = document.createElement('button');
+                    generateButton.textContent = 'Generate';
+                    generateButton.onclick = () => generateContent('{{ story_id }}', contentId);
+                    actionsCell.appendChild(generateButton);
+                } else {
+                    const actionsDiv = document.createElement('div');
+                    if (["video", "img", "audio"].includes(row_type)) {
+                        const previewButton = document.createElement('button');
+                        previewButton.textContent = 'Preview';
+                        previewButton.onclick = () => previewContent('{{ story_id }}', contentId);
+                        actionsDiv.appendChild(previewButton);
+
+                        const mediaFileInput = document.createElement('input');
+                        mediaFileInput.type = 'file';
+                        mediaFileInput.id = `mediaFile-${contentId}`;
+                        mediaFileInput.accept = `${row_type}/*`;
+                        actionsDiv.appendChild(mediaFileInput);
+                    }
+
+                    const updateButton = document.createElement('button');
+                    updateButton.textContent = 'Update';
+                    updateButton.onclick = () => updateContent('{{ story_id }}', contentId);
+                    actionsDiv.appendChild(updateButton);
+
+                    const generateButton = document.createElement('button');
+                    generateButton.textContent = 'Generate';
+                    generateButton.onclick = () => generateContent('{{ story_id }}', contentId);
+                    actionsDiv.appendChild(generateButton);
+
+                    const propogateButton = document.createElement('button');
+                    propogateButton.textContent = 'Propogate';
+                    propogateButton.onclick = () => generateContent('{{ story_id }}', `${contentId}*`);
+                    actionsDiv.appendChild(propogateButton);
+
+
+                    const rebuildButton = document.createElement('button');
+                    rebuildButton.textContent = 'Rebuild';
+                    rebuildButton.onclick = () => generateContent('{{ story_id }}', `${contentId}^`);
+                    actionsDiv.appendChild(rebuildButton);
+
+                    actionsCell.appendChild(actionsDiv);
+
+                }
+            } else {
+                console.log('Updating existing row:', contentId);
+
+                // Get the textarea element directly by its ID
+                const contentDataInput = document.getElementById(`contentData-${contentId}`);
+
+                // Update the value of the textarea
+                if (contentDataInput) {
+                    contentDataInput.value = contentData; 
+                                // Add flash animation to the row
+                    row.classList.add('flash-update-animation');
+
+                    // Remove the animation class after a delay
+                    setTimeout(() => {
+                        row.classList.remove('flash-update-animation');
+                    }, 500); // Adjust delay (in milliseconds) as needed 
+
+
+                } else {
+                    console.error(`Textarea with ID 'contentData-${contentId}' not found.`);
+        
+                }
+
+            }
+            
+        }
+
+        function getStateColor(state) {
+            switch (state) {
+                case 'done': return 'lightgreen';
+                case 'invalid': return 'lightcoral';
+                case 'generating': return 'lightgray'; //Will puslse
+                case 'locked': return 'lightyellow';
+                case 'needed': return 'lightblue';
+                case 'none': return 'white'; // Default color
+                default: return 'white'; // Default color
+            }
+        }
+
+
+
+        function fetchAndSetContentState(docId, contentId) {
+             fetch(`/${docId}/getcontentstate?content_id=${contentId}`)
+        .then(response => response.text())
+        .then(data => {
+            const stateSelect = document.getElementById(`contentState-${contentId}`);
+            if (stateSelect) {
+                console.log('Fetched content state:', data);
+                stateSelect.value = data; 
+                const row = document.getElementById(`storyRow-${contentId}`);
+                if (data == 'generating') {
+                    addGeneratingAnimation(row);
+                } else {
+                    removeGeneratingAnimation(row);
+                }
+                updateNodeColor(contentId, data);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching content state:', error);
+        });
+        }
+
+        function setContentState(docId, contentId) {
+            const stateSelect = document.getElementById(`contentState-${contentId}`);
+            const newState = stateSelect.value;
+
+            fetch(`/${docId}/setcontentstate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content_id: contentId, state: newState })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Content state updated:', data);
+                // Add flash animation to the row
+                const row = document.getElementById(`storyRow-${contentId}`);
+                if (newState == 'generating') {
+                    addGeneratingAnimation(row);
+                } else {
+                    removeGeneratingAnimation(row);
+                 }
+                row.classList.add('flash-update-animation');
+                // Remove the animation class after a delay
+                setTimeout(() => {
+                    row.classList.remove('flash-update-animation');
+                }, 500); // Adjust delay (in milliseconds) as needed 
+            })
+            .catch(error => {
+                console.error('Error updating content state:', error);
+                // Add flash animation to the row
+                const row = document.getElementById(`storyRow-${contentId}`);
+                row.classList.add('flash-error-animation');
+
+                // Remove the animation class after a delay
+                setTimeout(() => {
+                    row.classList.remove('flash-error-animation');
+                }, 500); // Adjust delay (in milliseconds) as needed 
+            });
+        }
+
+        function updateNodeColor(contentId, state) {
+            const color = getStateColor(state);
+
+            cy.getElementById(contentId).style({
+                'background-color': color
+            });
+
+         // Apply pulse animation if in 'generating' state
+            if (state === 'generating') {
+                addGeneratingAnimationToNode(contentId);
+            } else {
+                removeGeneratingAnimationFromNode(contentId);
+            }
+        }
+
+        
+
+        function updateStoryTableRowState(contentId, newState) {
+            
+            let row = document.getElementById(`storyRow-${contentId}`);
+            
+
+            if (!row) {
+                let row_type = getMediaTypeForContentId(contentId);
+                console.log('Adding new content row:', contentId);
+                // Create a new row
+                row = storyTable.insertRow();
+                row.id = `storyRow-${contentId}`;
+
+                // Add Content ID cell
+                const contentIdCell = row.insertCell();
+                contentIdCell.textContent = contentId;
+
+                // Add Content Data cell (editable)
+                const contentDataCell = row.insertCell();
+                const contentDataInput = document.createElement('textarea');
+                contentDataInput.id = `contentData-${contentId}`;
+                contentDataInput.value = '';
+                if (row_type == "set") {
+                    contentDataInput.disabled = true;
+                }
+                contentDataCell.appendChild(contentDataInput);
+
+                // Add State Select
+                const stateSelectCell = row.insertCell();
+                const stateSelect = document.createElement('select');
+                stateSelect.id = `contentState-${contentId}`;
+                stateSelect.innerHTML = `
+                    <option value="none">None</option>
+                    <option value="done">Done</option>
+                    <option value="invalid">Invalid</option>
+                    <option value="needed">Needed</option>
+                    <option value="generating">Generating</option>
+                    <option value="locked">Locked</option>
+                `;
+                stateSelect.value = newState; // Set initial state
+                stateSelect.onchange = () => setContentState('{{ story_id }}', contentId);
+                stateSelectCell.appendChild(stateSelect);
+              
+                // Add Actions cell
+                const actionsCell = row.insertCell();
+
+                if (row_type == "set") {
+                    const generateButton = document.createElement('button');
+                    generateButton.textContent = 'Generate';
+                    generateButton.onclick = () => generateContent('{{ story_id }}', contentId);
+                    actionsCell.appendChild(generateButton);
+                } else {
+                    const actionsDiv = document.createElement('div');
+                    if (["video", "img", "audio"].includes(row_type)) {
+                        const previewButton = document.createElement('button');
+                        previewButton.textContent = 'Preview';
+                        previewButton.onclick = () => previewContent('{{ story_id }}', contentId);
+                        actionsDiv.appendChild(previewButton);
+
+                        const mediaFileInput = document.createElement('input');
+                        mediaFileInput.type = 'file';
+                        mediaFileInput.id = `mediaFile-${contentId}`;
+                        mediaFileInput.accept = `${row_type}/*`;
+                        actionsDiv.appendChild(mediaFileInput);
+                    }
+
+                    const updateButton = document.createElement('button');
+                    updateButton.textContent = 'Update';
+                    updateButton.onclick = () => updateContent('{{ story_id }}', contentId);
+                    actionsDiv.appendChild(updateButton);
+
+                    const generateButton = document.createElement('button');
+                    generateButton.textContent = 'Generate';
+                    generateButton.onclick = () => generateContent('{{ story_id }}', contentId);
+                    actionsDiv.appendChild(generateButton);
+
+                    const propogateButton = document.createElement('button');
+                    propogateButton.textContent = 'Propogate';
+                    propogateButton.onclick = () => generateContent('{{ story_id }}', `${contentId}*`);
+                    actionsDiv.appendChild(propogateButton);
+
+
+                    const rebuildButton = document.createElement('button');
+                    rebuildButton.textContent = 'Rebuild';
+                    rebuildButton.onclick = () => generateContent('{{ story_id }}', `${contentId}^`);
+                    actionsDiv.appendChild(rebuildButton);
+
+                    actionsCell.appendChild(actionsDiv);
+                }
+
+            } else {
+                const stateSelect = document.getElementById(`contentState-${contentId}`);
+                if (stateSelect) {
+                      const optionToSelect = stateSelect.querySelector(`option[value="${newState}"]`);
+                      if (optionToSelect) {
+                          optionToSelect.selected = true;
+                       } else {
+                          console.error(`Option with value "${newState}" not found in select element.`);
+                      }
+                      // Add flash animation to the row (reusing existing animation)
+                      const row = document.getElementById(`storyRow-${contentId}`);
+                } else {
+                    console.error(`Select element with ID 'contentState-${contentId}' not found.`);
+            }
+
+            row.classList.add('flash-update-animation');
+                // Remove the animation class after a delay
+            setTimeout(() => {
+                   row.classList.remove('flash-update-animation');
+               }, 500); // Adjust delay (in milliseconds) as needed 
+            }
+            if (newState === 'generating') { // Add this check
+                addGeneratingAnimation(row);    // Add the animation to the row
+            } else {
+                removeGeneratingAnimation(row); // Remove the animation from the row
+            }
+        }
+
+        function removeGeneratingAnimation(tableRow) {
+            if (tableRow.classList.contains('flash-generating-animation')) {
+                tableRow.classList.remove('flash-generating-animation');
+                tableRow.cells[3].firstChild.disabled = false;
+                tableRow.cells[4].firstChild.disabled = false;
+                tableRow.cells[5].firstChild.disabled = false;
+            }
+
+        }
+
+        function addGeneratingAnimationToNode(nodeId) {
+           const node = cy.getElementById(nodeId);
+           if (node) {
+                if (!node.hasClass('flash-generating-animation')) {
+                    node.addClass('flash-generating-animation');
+                }
+            }
+        }
+
+        function removeGeneratingAnimationFromNode(nodeId) {
+            const node = cy.getElementById(nodeId);
+            if (node) {
+                if (node.hasClass('flash-generating-animation')) {
+                    node.removeClass('flash-generating-animation');
+                }
+            }
+        }
+
+        function addGeneratingAnimation(tableRow) {
+            if (!tableRow.classList.contains('flash-generating-animation')) {
+                tableRow.classList.add('flash-generating-animation');
+                tableRow.cells[3].firstChild.disabled = true;
+                tableRow.cells[4].firstChild.disabled = true;
+                tableRow.cells[5].firstChild.disabled = true;
+            }
+
+        }
+   
+        // Function to append content to an existing row in the Story Table
+        function appendStoryTableData(contentId, contentData) {
+            const row = document.getElementById(`storyRow-${contentId}`);
+            if (row) {
+                const contentDataInput = row.cells[1].firstChild;
+                contentDataInput.value += contentData; 
+            }
+        }
+
+        function getMediaTypeForContentId(contentId) {
+            const formatRow = document.getElementById(`formatRow-${contentId}`);
+
+        // Now you can access cells of the format row
+            if (formatRow) {
+                const contentType = formatRow.cells[5].textContent; // Get type (6th cell)
+                if (contentType) {
+                    return contentType;
+                }
+            }
+            return '';
+        }
+
+
+        // Function to add an error message to the Story Table
+        function addStoryTableError(contentId, errorMessage) {
+            const storyTable = document.getElementById('storyTableBody');
+            const row = storyTable.insertRow();
+            row.id = `errorRow-${contentId}`; 
+
+            const contentIdCell = row.insertCell();
+            contentIdCell.textContent = contentId;
+
+            const errorCell = row.insertCell();
+            errorCell.textContent = `Error: ${errorMessage}`;
+            errorCell.colSpan = 5; // Span across remaining columns
+            row.classList.add('flash-error-animation');
+
+            // Remove the animation class after a delay
+            setTimeout(() => {
+                row.classList.remove('flash-error-animation');
+            }, 500); // Adjust delay (in milliseconds) as needed 
+        }
+
+        // Function to start streaming content (modified from apitestclient.html)
+        function startStreamingContent(docId) {
+            const eventSource = new EventSource(`/${docId}/streamcontent`);
+            eventSource.addEventListener('NEW', handleContentEvent);
+            eventSource.addEventListener('REPLACE', handleContentEvent);
+            eventSource.addEventListener('ADD', handleContentEvent);
+            eventSource.addEventListener('ERROR', handleContentEvent);
+            eventSource.addEventListener('RESTATE', handleContentEvent);
+        }
+        
+       function formatDocument(docId) {
+
+           const formatName = document.getElementById('formatInput').value;
+           const formatMessage = document.getElementById('formatMessage'); // Get the message element
+       
+           fetch(`/${docId}/formatcontent`, {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(formatName)
+           })
+           .then(response => {
+               if (!response.ok) {
+                   return response.text().then(text => Promise.reject(text)); // Handle non-2xx responses
+               }
+               return response.text(); 
+           })
+           .then(data => {
+               formatMessage.textContent = 'Formating successful, reloading page.'; // Display success message
+               // Reload the page after successful format
+               window.location.reload();  
+           })
+           .catch(error => {
+               formatMessage.textContent = 'Error formatting: ' + error; // Display error message
+               console.error('Error formatting:', error);
+           });
+       }
+
+        function indexContent(docId, refresh = false) { // Add refresh flag
+            fetch(`/${docId}/indexcontent`)
+                .then(response => response.json())
+                .then(data => {
+                    const formatTableBody = document.getElementById('formatTable').querySelector('tbody');
+
+                    if (refresh) {  // Clear existing rows only if refresh is true
+                        formatTableBody.innerHTML = '';
+                    }
+
+                    data.forEach(item => {
+                        const row = formatTableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${item.id}</td>
+                            <td>${item.data || ''}</td>
+                            <td></td>  <!-- Initial Value (empty for now) -->
+                            <td>${item.state || ''}</td>
+                            <td></td>  <!-- Prompts (empty for now) -->
+                            <td>${item.type || ''}</td>
+                            <td><button onclick="generateContent('${docId}', '${item.id}')">Generate</button></td>
+                        `;
+                    });
+
+                })
+                .catch(error => {
+                    console.error('Error indexing content:', error);
+                });
+        }
+
+        function sortTable(tableId, columnIndex) {
+            const table = document.getElementById(tableId);
+            const rows = Array.from(table.rows).slice(1); // Get rows, excluding the header
+            let ascending = table.getAttribute("data-sort-asc") !== "true";
+            table.setAttribute("data-sort-asc", ascending);
+
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[columnIndex].innerText;
+                const cellB = rowB.cells[columnIndex].innerText;
+                
+                // Check if content is numeric
+                const a = isNaN(cellA) ? cellA : parseFloat(cellA);
+                const b = isNaN(cellB) ? cellB : parseFloat(cellB);
+                
+                return (a > b ? 1 : -1) * (ascending ? 1 : -1);
+            });
+
+            // Reattach sorted rows to table body
+            rows.forEach(row => table.tBodies[0].appendChild(row));
+        }
+
+        function buildCytoscapeVisualization(){
+            const dependentsMap = JSON.parse('{{ graph_dependents_map | tojson | safe }}');
+            const dependsOnMap = JSON.parse('{{ graph_depends_on_map | tojson | safe }}');
+            const initialStateMap = JSON.parse('{{ agent_state_map | tojson | safe }}');
+            const nodeList = JSON.parse('{{ sorted_agents | tojson | safe }}');
+        
+
+            // Create nodes and edges for Cytoscape.js
+            const elements = [];
+
+             // Add nodes to elements array
+            nodeList.forEach(content_id => {
+                console.log("Adding node:", content_id); // Log node data
+                elements.push({ data: {
+                     id: content_id,
+                     scolor: getStateColor(initialStateMap[content_id])
+                   }
+                 });
+            });
+
+            // Add edges to elements array
+            for (const source in dependentsMap) {
+                dependentsMap[source].forEach(target => {
+                    elements.push({
+                        data: {
+                            id: source + '-' + target, // Unique edge ID
+                            source: source,
+                            target: target
+                        }
+                    });
+                });
+            }
+        
+            // Initialize Cytoscape.js
+            cy = cytoscape({
+                container: document.getElementById('format-graph'), 
+                elements: elements,
+                style: [ // Customize the appearance
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(id)',
+                            'shape': 'roundrectangle',
+                            'width': 'label',
+                            'height': 'label',
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'background-color': 'data(scolor)',
+                            'border-width': 2,
+                            'border-color': 'black',
+                            'color': 'black',
+                            'font-size': 24,
+                            'padding': '10px'
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'curve-style': 'straight',
+                            'target-arrow-shape': 'triangle',
+                            'line-color': '#ccc',
+                            'target-arrow-color': '#ccc'
+                        }
+                    }
+                ],
+
+            });
+            
+            applyLayout('breadthfirst'); 
+            const layoutSelect = document.getElementById('layoutSelect');
+            layoutSelect.addEventListener('change', function() {
+                const selectedLayout = this.value;
+                applyLayout(selectedLayout);
+            });
+  
+        }
+        
+        function previewContent(docId, contentId) {
+            const contentDataInput = document.getElementById(`contentData-${contentId}`);
+            const contentUrl = contentDataInput.value;
+
+            if (contentUrl) {
+                window.open(contentUrl, '_blank');
+            }
+        }
+
+        function applyLayout(layoutName) {
+            if (cy) { // Check if cy is initialized
+                const layout = cy.layout({
+                    name: layoutName
+                });
+                layout.run();
+                cy.center();
+                cy.fit();
+            }
+        }
+        
+        function deleteDocument(doc_id) {
+            const url = `/${doc_id}/delete`;
+
+            fetch(url, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text();
+                }
+                return response.text(); 
+            })
+            .then(data => {
+                document.getElementById('deleteResult').innerText = data;  // Display success message
+                window.location.reload(); // Reload the page after successful deletion
+            })
+            .catch(error => {
+                document.getElementById('deleteResult').innerText = 'Error: ' + error; // Display error message
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Storyteller Document Inspector</h1>
+    <div class="panel" id="doc_info">
+         <h2 id="story_id">Document ID: {{ story_id }}</h2>
+         <h3 id="created_date">Created Date: {{ story_map["_touched"] }} </h3>
+        <button onclick="deleteDocument('{{ story_id }}')">Delete Document</button> <br>
+        <p id="deleteResult"></p>
+    </div>
+
+    <div class="panel" id="formatnewdoc"  {% if sorted_agents %}style="display: none;"{% endif %}>
+        <h2>Format New Document</h2>
+        <label for="formatInput">Format Name:</label><br>
+        <input type="text" id="formatInput" value="test.0.0.2"><br>
+        <button onclick="formatDocument('{{ story_id }}')">Load Format</button>
+        <p id="formatMessage"></p>  
+    </div>
+
+
+    
+    <div class="panel" {% if not sorted_agents %}style="display: none;"{% endif %}> 
+        <h2>Visualizer</h2>
+        <label for="layoutSelect">Choose a layout:</label>
+        <select id="layoutSelect">
+            <option value="breadthfirst">Breadthfirst</option>
+            <option value="circle">Circle</option>
+            <option value="concentric">Concentric</option>
+            <option value="cose">Cose</option>
+            <option value="grid">Grid</option>
+            <option value="klay">Klay</option>
+            <option value="random">Random</option>
+            </select>
+        <div id="format-graph"></div>
+        
+    </div>
+
+
+    <div class="panel" {% if not sorted_agents %}style="display: none;"{% endif %}>
+        <h2>Format Table</h2>
+        <table id="formatTable">
+            <thead>
+                <tr>
+                    <th>Content ID</th>
+                    <th>Description</th>
+                    <th>Initial Value</th>
+                    <th>Initial State</th>
+                    <th>Prompts</th>
+                    <th>Media Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for agent_id in sorted_agents %}
+                <tr id="formatRow-{{ agent_id }}">
+                    <td>{{ agent_id }}</td>
+                    <td>{{ format_map[agent_id].description }}</td>
+                    <td>{{ format_map[agent_id].initial_data }}</td>
+                    <td>{{ format_map[agent_id].initial_state }}</td>
+                    <td>
+                    {% for prompt in format_map[agent_id].prompts %}
+                            {{ prompt }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>{{ format_map[agent_id].media_type }}</td>
+                    <td>
+                        <button onclick="generateContent('{{ story_id }}', '{{ agent_id }}')">Generate</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel" {% if not sorted_agents %}style="display: none;"{% endif %}>
+        <h2>Story Table</h2>
+        <table id="storyTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable('storyTable', 0)">Content ID</th>
+                    <th onclick="sortTable('storyTable', 1)">Data</th>
+                    <th>State</th>
+                    <th>Actions</th> 
+                </tr>
+            </thead>
+            <tbody id="storyTableBody">
+                {% for key in sorted_keys %}
+                <tr id="storyRow-{{ key }}">
+                    <td>{{ key }}</td>
+                    <td>
+                        <textarea id="contentData-{{ key }}">{{ story_map[key] }}</textarea> 
+                    </td>
+                    <td>
+                        <select id="contentState-{{ key }}" onchange="setContentState('{{ story_id }}', '{{ key }}')">
+                            <option value="none" {% if agent_state_map[key] == "none" %}selected{% endif %}>None</option>
+                            <option value="done" {% if agent_state_map[key] == "done" %}selected{% endif %}>Done</option>
+                            <option value="invalid" {% if agent_state_map[key] == "invalid" %}selected{% endif %}>Invalid</option>
+                            <option value="generating" {% if agent_state_map[key] == "generating" %}selected{% endif %}>Generating</option>
+                            <option value="locked" {% if agent_state_map[key] == "locked" %}selected{% endif %}>Locked</option>
+                            <option value="needed" {% if agent_state_map[key] == "needed" %}selected{% endif %}>Needed</option>
+                        </select>
+                    </td>
+                    <td>
+                        {% if format_map[key] and format_map[key].media_type == "set" %}
+                            <button onclick="generateContent('{{ story_id }}', '{{ key }}')">Generate</button>
+                        {% else %}
+                            <div>
+                                {% if format_map[key] and format_map[key].media_type in ["video", "img", "audio"] %}
+                                    <button onclick="previewContent('{{ story_id }}', '{{ key }}')">Preview</button>
+                                    <input type="file" id="mediaFile-{{ key }}" accept="{{ format_map[key].media_type }}/*">
+                                {% endif %}
+                                <button onclick="updateContent('{{ story_id }}', '{{ key }}')">Update</button>
+                                <button onclick="generateContent('{{ story_id }}', '{{ key }}')">Generate</button>
+                                <button onclick="generateContent('{{ story_id }}', '{{ key }}*')">Propogate</button>
+                                <button onclick="generateContent('{{ story_id }}', '{{ key }}^')">Rebuild</button>
+                            </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+    <script> window.onload = () => {
+        {% if sorted_agents %}
+            startStreamingContent('{{ story_id }}'); 
+            buildCytoscapeVisualization();
+        {% endif %}
+     };
+    </script>
+</body>
+</html>

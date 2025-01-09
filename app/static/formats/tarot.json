@@ -1,0 +1,944 @@
+{
+    "DISPLAY_NAME": "Tarot Deck",
+    "DESC": "A format representing the Rider-Waite Tarot Deck.",
+    "AGENTS": {
+        "twist": {
+            "DESC": "The unique style of this tarot deck.",
+            "DATA": "based on the themes, ideas and names from Homer's Odyssey",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        "aesthetic" : {
+            "DESC": "The aesthetic of this tarot deck.",
+            "DATA": "Use a Pre-Raphealite illustration style as if my Rosetti or Morris to draw the requested art, characterized by minute description of detail, a luminous palette of bright colors, and subject matter of from poetry and medieval legends and tales, with an aesthetic of beauty for its own sake, archaic compositions, intensely sharp focus—which, with an absence of shadows, flattened the depicted forms—and the stark coloration. Do not include any text titles or captions.",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES":[]
+        },
+        "deck": {
+            "DESC": "All cards in the Tarot Deck",
+            "DATA": "fool,magician,highpriestess,empress,emperor,hierophant,lovers,chariot,strength,hermit,wheeloffortune,justice,hangedman,death,temperance,devil,tower,star,moon,sun,judgement,world",
+            "TYPE": "set",
+            "STATE": "needed",
+            "PROMPTS": [
+                "§fool§",
+                "§magician§",
+                "§highpriestess§",
+                "§empress§",
+                "§emperor§",
+                "§hierophant§",
+                "§lovers§",
+                "§chariot§",
+                "§strength§",
+                "§hermit§",
+                "§wheeloffortune§",
+                "§justice§",
+                "§hangedman§",
+                "§death§",
+                "§temperance§",
+                "§devil§",
+                "§tower§",
+                "§star§",
+                "§moon§",
+                "§sun§",
+                "§judgement§",
+                "§world§"
+            ] ,
+            "MEMORIES": []
+        },        
+        "fool": {
+                   "DESC": "The Fool Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§fool.name§",
+                       "§fool.fortune§",
+                       "§fool.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "magician": {
+                   "DESC": "The Magician Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§magician.name§",
+                       "§magician.fortune§",
+                       "§magician.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "highpriestess": {
+                   "DESC": "The High Priestess Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§highpriestess.name§",
+                       "§highpriestess.fortune§",
+                       "§highpriestess.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "empress": {
+                   "DESC": "The Empress Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§empress.name§",
+                       "§empress.fortune§",
+                       "§empress.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "emperor": {
+                   "DESC": "The Emperor Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§emperor.name§",
+                       "§emperor.fortune§",
+                       "§emperor.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "hierophant": {
+                   "DESC": "The Hierophant Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§hierophant.name§",
+                       "§hierophant.fortune§",
+                       "§hierophant.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "lovers": {
+                   "DESC": "The Lovers Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§lovers.name§",
+                       "§lovers.fortune§",
+                       "§lovers.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "chariot": {
+                   "DESC": "The Chariot Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§chariot.name§",
+                       "§chariot.fortune§",
+                       "§chariot.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "strength": {
+                   "DESC": "Strength Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§strength.name§",
+                       "§strength.fortune§",
+                       "§strength.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "hermit": {
+                   "DESC": "The Hermit Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§hermit.name§",
+                       "§hermit.fortune§",
+                       "§hermit.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "wheeloffortune": {
+                   "DESC": "The Wheel of Fortune Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§wheeloffortune.name§",
+                       "§wheeloffortune.fortune§",
+                       "§wheeloffortune.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "justice": {
+                   "DESC": "Justice Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§justice.name§",
+                       "§justice.fortune§",
+                       "§justice.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "hangedman": {
+                   "DESC": "The Hanged Man Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§hangedman.name§",
+                       "§hangedman.fortune§",
+                       "§hangedman.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "death": {
+                   "DESC": "Death Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§death.name§",
+                       "§death.fortune§",
+                       "§death.image§"
+                   ],
+                   "MEMORIES": []        
+               },
+               "temperance": {
+                   "DESC": "Temperance Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§temperance.name§",
+                       "§temperance.fortune§",
+                       "§temperance.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "devil": {
+                   "DESC": "The Devil Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§devil.name§",
+                       "§devil.fortune§",
+                       "§devil.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "tower": {
+                   "DESC": "The Tower Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§tower.name§",
+                       "§tower.fortune§",
+                       "§tower.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "star": {
+                   "DESC": "The Star Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§star.name§",
+                       "§star.fortune§",
+                       "§star.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "moon": {
+                   "DESC": "The Moon Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§moon.name§",
+                       "§moon.fortune§",
+                       "§moon.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "sun": {
+                   "DESC": "The Sun Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§sun.name§",
+                       "§sun.fortune§",
+                       "§sun.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "judgement": {
+                   "DESC": "Judgement Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§judgement.name§",
+                       "§judgement.fortune§",
+                       "§judgement.image§"
+                   ],
+                   "MEMORIES": []
+               },
+               "world": {
+                   "DESC": "The World Tarot Card",
+                   "DATA": "",
+                   "TYPE": "set",
+                   "STATE": "done",
+                   "PROMPTS": [
+                       "§world.name§",
+                       "§world.fortune§",
+                       "§world.image§"
+                   ],
+                   "MEMORIES": []
+               }, 
+       
+
+        "fool.image": {
+            "DESC": "The image on the Fool Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the fool Tarot Card but named §fool.name§ representing the ideas of §fool.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "fool.name": {
+            "DESC": "The name of the Fool Tarot Card",
+            "DATA": "The Fool",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Fool Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "fool.fortune": {
+            "DESC": "The fortune associated with the Fool Tarot Card",
+            "DATA": "New beginnings, innocence, spontaneity, a leap of faith",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "magician.image": {
+            "DESC": "The image on the Magician Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Magician Tarot Card but named §magician.name§ representing the ideas of §magician.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "magician.name": {
+            "DESC": "The name of the Magician Tarot Card",
+            "DATA": "The Magician",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Magician Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "magician.fortune": {
+            "DESC": "The fortune associated with the Magician Tarot Card",
+            "DATA": "Manifestation, willpower, power, action",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+       
+        "highpriestess.image": {
+            "DESC": "The image on the High Priestess Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the High Priestess Tarot Card but named §highpriestess.name§ representing the ideas of §highpriestess.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "highpriestess.name": {
+            "DESC": "The name of the High Priestess Tarot Card",
+            "DATA": "The High Priestess",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the High Priestess Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "highpriestess.fortune": {
+            "DESC": "The fortune associated with the High Priestess Tarot Card",
+            "DATA": "Intuition, subconscious mind, inner wisdom",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        "empress.image": {
+            "DESC": "The image on the Empress Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Empress Tarot Card but named §empress.name§ representing the ideas of §empress.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "empress.name": {
+            "DESC": "The name of the Empress Tarot Card",
+            "DATA": "The Empress",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Empress Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },       
+        "empress.fortune": {
+            "DESC": "The fortune associated with the Empress Tarot Card",
+            "DATA": "Abundance, nurturing, fertility, motherly love",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "emperor.image": {
+            "DESC": "The image on the Emperor Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Emperor Tarot Card but named §emperor.name§ representing the ideas of §emperor.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "emperor.name": {
+            "DESC": "The name of the Emperor Tarot Card",
+            "DATA": "The Emperor",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Emperor Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "emperor.fortune": {
+            "DESC": "The fortune associated with the Emperor Tarot Card",
+            "DATA": "Structure, authority, control, fatherly figure",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "hierophant.image": {
+            "DESC": "The image on the Hierophant Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Hierophant Tarot Card but named §hierophant.name§ representing the ideas of §hierophant.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "hierophant.name": {
+            "DESC": "The name of the Hierophant Tarot Card",
+            "DATA": "The Hierophant",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Hierophant Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "hierophant.fortune": {
+            "DESC": "The fortune associated with the Hierophant Tarot Card",
+            "DATA": "Tradition, conformity, spiritual guidance",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "lovers.image": {
+            "DESC": "The image on the Lovers Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Lovers Tarot Card but named §lovers.name§ representing the ideas of §lovers.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "lovers.name": {
+            "DESC": "The name of the Lovers Tarot Card",
+            "DATA": "The Lovers",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Lovers Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "lovers.fortune": {
+            "DESC": "The fortune associated with the Lovers Tarot Card",
+            "DATA": "Love, relationships, choices, partnerships",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "chariot.image": {
+            "DESC": "The image on the Chariot Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Chariot Tarot Card but named §chariot.name§ representing the ideas of §chariot.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "chariot.name": {
+            "DESC": "The name of the Chariot Tarot Card",
+            "DATA": "The Chariot",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Chariot Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "chariot.fortune": {
+            "DESC": "The fortune associated with the Chariot Tarot Card",
+            "DATA": "Willpower, determination, control, victory",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "strength.image": {
+            "DESC": "The image on the Strength Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Strength Tarot Card but named §strength.name§ representing the ideas of §strength.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "strength.name": {
+            "DESC": "The name of the Strength Tarot Card",
+            "DATA": "Strength",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Strength Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "strength.fortune": {
+            "DESC": "The fortune associated with the Strength Tarot Card",
+            "DATA": "Inner strength, courage, compassion, patience",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "hermit.image": {
+            "DESC": "The image on the Hermit Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Hermit Tarot Card but named §hermit.name§ representing the ideas of §hermit.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "hermit.name": {
+            "DESC": "The name of the Hermit Tarot Card",
+            "DATA": "The Hermit",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Hermit Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "hermit.fortune": {
+            "DESC": "The fortune associated with the Hermit Tarot Card",
+            "DATA": "Introspection, solitude, seeking guidance",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "wheeloffortune.image": {
+            "DESC": "The image on the Wheel of Fortune Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Wheel of Fortune Tarot Card but named §wheeloffortune.name§ representing the ideas of §wheeloffortune.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "wheeloffortune.name": {
+            "DESC": "The name of the Wheel of Fortune Tarot Card",
+            "DATA": "Wheel of Fortune",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Wheel of Fortune Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "wheeloffortune.fortune": {
+            "DESC": "The fortune associated with the Wheel of Fortune Tarot Card",
+            "DATA": "Fate, destiny, cycles, change",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "justice.image": {
+            "DESC": "The image on the Justice Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Justice Tarot Card but named §justice.name§ representing the ideas of §justice.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "justice.name": {
+            "DESC": "The name of the Justice Tarot Card",
+            "DATA": "Justice",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Justice Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "justice.fortune": {
+            "DESC": "The fortune associated with the Justice Tarot Card",
+            "DATA": "Justice, fairness, balance, truth",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "hangedman.image": {
+            "DESC": "The image on the Hanged Man Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Hanged Man Tarot Card but named §hangedman.name§ representing the ideas of §hangedman.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "hangedman.name": {
+            "DESC": "The name of the Hanged Man Tarot Card",
+            "DATA": "The Hanged Man",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Hanged Man Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "hangedman.fortune": {
+            "DESC": "The fortune associated with the Hanged Man Tarot Card",
+            "DATA": "Suspension, letting go, different perspective",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "death.image": {
+            "DESC": "The image on the Death Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Death Tarot Card but named §death.name§ representing the ideas of §death.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "death.name": {
+            "DESC": "The name of the Death Tarot Card",
+            "DATA": "Death",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Death Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "death.fortune": {
+            "DESC": "The fortune associated with the Death Tarot Card",
+            "DATA": "Endings, transformation, change, letting go",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "temperance.image": {
+            "DESC": "The image on the Temperance Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Temperance Tarot Card but named §temperance.name§ representing the ideas of §temperance.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "temperance.name": {
+            "DESC": "The name of the Temperance Tarot Card",
+            "DATA": "Temperance",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Temperance Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "temperance.fortune": {
+            "DESC": "The fortune associated with the Temperance Tarot Card",
+            "DATA": "Balance, patience, moderation, harmony",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "devil.image": {
+            "DESC": "The image on the Devil Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Devil Tarot Card but named §devil.name§ representing the ideas of §devil.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "devil.name": {
+            "DESC": "The name of the Devil Tarot Card",
+            "DATA": "The Devil",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Devil Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "devil.fortune": {
+            "DESC": "The fortune associated with the Devil Tarot Card",
+            "DATA": "Materialism, addiction, bondage, temptation",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "tower.image": {
+            "DESC": "The image on the Tower Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Tower Tarot Card but named §tower.name§ representing the ideas of §tower.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "tower.name": {
+            "DESC": "The name of the Tower Tarot Card",
+            "DATA": "The Tower",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Tower Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "tower.fortune": {
+            "DESC": "The fortune associated with the Tower Tarot Card",
+            "DATA": "Sudden change, upheaval, chaos, destruction",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "star.image": {
+            "DESC": "The image on the Star Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Star Tarot Card but named §star.name§ representing the ideas of §star.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "star.name": {
+            "DESC": "The name of the Star Tarot Card",
+            "DATA": "The Star",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Star Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "star.fortune": {
+            "DESC": "The fortune associated with the Star Tarot Card",
+            "DATA": "Hope, faith, optimism, healing",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "moon.image": {
+            "DESC": "The image on the Moon Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Moon Tarot Card but named §moon.name§ representing the ideas of §moon.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "moon.name": {
+            "DESC": "The name of the Moon Tarot Card",
+            "DATA": "The Moon",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Moon Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "moon.fortune": {
+            "DESC": "The fortune associated with the Moon Tarot Card",
+            "DATA": "Illusions, intuition, subconscious, dreams",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "sun.image": {
+            "DESC": "The image on the Sun Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Sun Tarot Card but named §sun.name§ representing the ideas of §sun.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "sun.name": {
+            "DESC": "The name of the Sun Tarot Card",
+            "DATA": "The Sun",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Sun Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "sun.fortune": {
+            "DESC": "The fortune associated with the Sun Tarot Card",
+            "DATA": "Joy, success, positivity, happiness",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        
+        "judgement.image": {
+            "DESC": "The image on the Judgement Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the Judgement Tarot Card but named §judgement.name§ representing the ideas of §judgement.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "judgement.name": {
+            "DESC": "The name of the Judgement Tarot Card",
+            "DATA": "Judgement",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the Judgement Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "judgement.fortune": {
+            "DESC": "The fortune associated with the Judgement Tarot Card",
+            "DATA": "Awakening, rebirth, reflection, reckoning",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        },
+        "world.image": {
+            "DESC": "The image on the World Tarot Card",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["Draw a unique image of the World Tarot Card but named §world.name§ representing the ideas of §world.fortune§.","§twist§", "§aesthetic§"],
+            "MEMORIES": []
+        },
+        "world.name": {
+            "DESC": "The name of the World Tarot Card",
+            "DATA": "The World",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["Give me your single BEST unique new name for the World Tarot Card. DO NOT Explain, do not provide multiple options, do not include punctuation. ONLY GIVE ME YOUR BEST SHORT NAME for this very particular version of the arcana.","§twist§"],
+            "MEMORIES": []
+        },
+        "world.fortune": {
+            "DESC": "The fortune associated with the World Tarot Card",
+            "DATA": "Completion, fulfillment, wholeness, integration",
+            "TYPE": "txt",
+            "STATE": "done",
+            "PROMPTS": [],
+            "MEMORIES": []
+        }
+        ,
+        "fortune": {
+            "DESC": "A three card Tarot reading.",
+            "DATA": "",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["You are a Tarot card reader who works in this tradition: §twist§",
+                        "Select three cards from your unique Tarot deck and tell my fortune with it. ONLY PICK cards from this following list of cards:",
+                        "§fool.name§",
+                        "§magician.name§",
+                        "§highpriestess.name§",
+                        "§empress.name§",
+                        "§emperor.name§",
+                        "§hierophant.name§",
+                        "§lovers.name§",
+                        "§chariot.name§",
+                        "§strength.name§",
+                        "§hermit.name§",
+                        "§wheeloffortune.name§",
+                        "§justice.name§",
+                        "§hangedman.name§",
+                        "§death.name§",
+                        "§temperance.name§",
+                        "§devil.name§",
+                        "§tower.name§",
+                        "§star.name§",
+                        "§moon.name§",
+                        "§sun.name§",
+                        "§judgement.name§",
+                        "§world.name§"
+                    ],
+            "MEMORIES": []
+        },
+        "voiceover" :
+        {
+            "DESC": "A voiceover of the Tarot reading.",
+            "DATA": "",
+            "TYPE": "audio",
+            "STATE": "needed",
+            "PROMPTS": ["§fortune§"],
+            "MEMORIES": []
+        },
+        "video" : {
+            "DESC": "A video of a Tarot reading.",
+            "DATA": "fortune,voiceover",
+            "TYPE": "video",
+            "STATE": "needed",
+            "PROMPTS": [
+                "§fortune§",
+                "§voiceover§",
+                "§fool.image§",
+                        "§magician.image§",
+                        "§highpriestess.image§",
+                        "§empress.image§",
+                        "§emperor.image§",
+                        "§hierophant.image§",
+                        "§lovers.image§",
+                        "§chariot.image§",
+                        "§strength.image§",
+                        "§hermit.image§",
+                        "§wheeloffortune.image§",
+                        "§justice.image§",
+                        "§hangedman.image§",
+                        "§death.image§",
+                        "§temperance.image§",
+                        "§devil.image§",
+                        "§tower.image§",
+                        "§star.image§",
+                        "§moon.image§",
+                        "§sun.image§",
+                        "§judgement.image§",
+                        "§world.image§"
+                
+            ],
+            "MEMORIES": []
+        }
+    }
+}
+
+

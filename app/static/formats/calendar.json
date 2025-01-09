@@ -1,0 +1,154 @@
+{
+    "DISPLAY_NAME": "Calendar Video",
+    "DESC": "A test of video generation.",
+    "AGENTS": {
+        "calendar": {
+            "DESC": "A collection of months.",
+            "DATA": "January,February,March,April,May,June,July,August,September,October,November,December",
+            "TYPE": "set",
+            "STATE": "needed",
+            "PROMPTS": [
+                "§January§",
+                "§February§",
+                "§March§",
+                "§April§",
+                "§May§",
+                "§June§",
+                "§July§",
+                "§August§",
+                "§September§",
+                "§October§",
+                "§November§",
+                "§December§"
+            ],
+            "MEMORIES": []
+        },
+        "style": {
+            "DESC": "The style of the calendar images.",
+            "DATA": "photorealistic",
+            "TYPE": "txt",
+            "STATE": "needed",
+            "PROMPTS": ["What style should the calendar images be generated in?"],
+            "MEMORIES": []
+
+        },
+        "January": {
+            "DESC":"The Month of January",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of January, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "February": {
+            "DESC":"The Month of February",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of February, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "March": {
+            "DESC":"The Month of March",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of March, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "April": {
+            "DESC":"The Month of April",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of April, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "May": {
+            "DESC":"The Month of May",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of May, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "June": {
+            "DESC":"The Month of June",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of June, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "July": {
+            "DESC":"The Month of July",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of July, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "August": {
+            "DESC":"The Month of August",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of August, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "September": {
+            "DESC":"The Month of September",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of September, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "October": {
+            "DESC":"The Month of October",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of October, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "November": {
+            "DESC":"The Month of November",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of November, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "December": {
+            "DESC":"The Month of December",
+            "DATA": "",
+            "TYPE": "img",
+            "STATE": "needed",
+            "PROMPTS": ["An image illustrating the month of December, in a §style§ style."],
+            "MEMORIES": []
+        },
+        "calendar.video": {
+            "DESC": "A video of the calendar.",
+            "DATA": "style,January,February,March,April,May,June,July,August,September,October,November,December",
+            "TYPE": "video",
+            "STATE": "needed",
+            "PROMPTS": [
+                "§January§",
+                "§February§",
+                "§March§",
+                "§April§",
+                "§May§",
+                "§June§",
+                "§July§",
+                "§August§",
+                "§September§",
+                "§October§",
+                "§November§",
+                "§December§"
+            ],
+            "MEMORIES": []
+        }
+
+    }
+}

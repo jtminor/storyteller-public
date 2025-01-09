@@ -1,0 +1,66 @@
+{
+    "google-text-basic" : {
+        "service" : "vertexai",
+        "model_name" : "gemini-1.5-pro-002"
+        },
+    "latlong-to-name" : {
+        "service" : "vertexai",
+        "model_name" : "gemini-1.5-pro-002",
+        "system" : ["You are a machine that ONLY emits place names. The user will give you a lat/long and convert to the nearest place name.",
+        "We're trying to find places people live in these areas -- use neighborhoods and towns along with the state and country."]
+        },
+    "google-text-single-sentence" : {
+        "service" : "vertexai",
+        "model_name" : "text-bison@001",
+        "system" : "You are a machine that only produces a single english sentence in response to all requests."
+        },
+    "google-image-basic" : {
+        "service" : "vertexai",
+        "model_name" : "imagen-3.0-generate-001",
+        "secret_name" : "",
+        "parameters" : {
+            "aspect" : "1:1"
+        }
+    },
+    "google-speech-basic" : {
+        "service" : "vertexai",
+        "model_name" : "speech",
+        "secret_name" : "",
+        "parameters" : {
+            "voice" : "en-US-Wavenet-B"
+        }
+    },
+    "test" : {
+        "service" : "test",
+        "model_name" : "test",
+        "secret_name" : "",
+        "parameters" : {}
+    },
+    "openai-text-basic" : {
+        "service" : "openai",
+        "model_name" : "gpt-3.5-turbo",
+        "secret_name" : "OPENAI_API_KEY",
+        "parameters" : {
+            "max_length" : 100,
+            "temperature" : 0.5
+        }
+    },
+    "openai-image-basic" : {
+        "service" : "openai",
+        "model_name" : "dall-e-2",
+        "secret_name" : "OPENAI_API_KEY",
+        "parameters" : {}
+    },
+    "openai-speech-basic" : {
+        "service" : "openai",
+        "model_name" : "whisper-1",
+        "secret_name" : "OPENAI_API_KEY",
+        "parameters" : {}
+    },
+    "ollama-text-basic" : {
+        "service" : "ollama",
+        "model_name" : "mistral",
+        "secret_name" : "",
+        "parameters" : {}
+    }
+}

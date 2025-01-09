@@ -1,0 +1,439 @@
+{
+	"DISPLAY_NAME": "Basketball Team",
+	"DESC": "A collection of AI agents representing a generic basketball team.",
+	"AGENTS": {
+		"basketball": {
+			"DESC": "Information about the basketball team.",
+			"DATA": "",
+			"TYPE": "set",
+			"STATE": "needed",
+			"PROMPTS": [
+				"§team§",
+				"§mascot§",
+				"§venue§",
+				"§players§",
+				"§story§",
+				"§narration§",
+				"§video§"
+			],
+			"MEMORIES": []
+		},
+	  "team": {
+		"DESC": "Information about the basketball team.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": ["§team.name§", "§team.colors§", "§team.photo§", "§team.slogan§"],
+		"MEMORIES": []
+	  },
+	  "team.name": {
+		"DESC": "The name of the basketball team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Invent a real sounding but made up name for an imaginary pro basketball team, do not use any existing NBA team or college team names."],
+		"MEMORIES": []
+	  },
+	  "team.colors": {
+		"DESC": "The primary and secondary colors of the team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["What are the two main colors of this made up basketball team named §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "team.photo": {
+		"DESC": "A team photo of the basketball team in uniform.",
+		"DATA": "",
+		"TYPE": "img",
+		"STATE": "needed",
+		"PROMPTS": ["Generate a team photo of the §team.name§ basketball team, wearing their team colors §team.colors§ playing in their home areana §venue.name§."],
+		"MEMORIES": []
+	  },
+	  "team.slogan": {
+		"DESC": "A catchy slogan for the basketball team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Generate a memorable slogan for the §team.name§ basketball team."],
+		"MEMORIES": []
+	  },
+	  "mascot": {
+		"DESC": "Information about the team mascot.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": ["§mascot.name§", "§mascot.image§"],
+		"MEMORIES": []
+	  },
+	  "mascot.name": {
+		"DESC": "The name of the team mascot.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Make up a mascot name for the fanstasy basketball team named §team.name§ whose team colors are §team.colors§"],
+		"MEMORIES": []
+	  },
+	  "mascot.image": {
+		"DESC": "An image of the team mascot.",
+		"DATA": "",
+		"TYPE": "img",
+		"STATE": "needed",
+		"PROMPTS": ["Generate an image of §mascot.name§, the mascot of the §team.name§ basketball team, whose team colors are §team.colors§."],
+		"MEMORIES": []
+	  },
+	  "venue": {
+		"DESC": "Information about the team's home venue.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": ["§venue.name§", "§venue.image§"],
+		"MEMORIES": []
+	  },
+	  "venue.name": {
+		"DESC": "The name of the team's home venue.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Make up an imaginary name of the arena where the §team.name§ play. Do not name any real basketball arenas."],
+		"MEMORIES": []
+	  },
+	  "venue.image": {
+		"DESC": "An image of the team's home venue.",
+		"DATA": "",
+		"TYPE": "img",
+		"STATE": "needed",
+		"PROMPTS": ["Generate an image of the imaginary arena §venue.name§, home of the §team.name§."],
+		"MEMORIES": []
+	  },
+	  "players": {
+		"DESC": "Information about the starting lineup.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": ["§player1§", "§player2§", "§player3§", "§player4§", "§player5§"],
+		"MEMORIES": []
+	  },
+	  "player1": {
+		"DESC": "Information about the starting point guard.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": [
+		  "§player1.position§",
+		  "§player1.name§",
+		  "§player1.timeonteam§",
+		  "§player1.university§",
+		  "§player1.image§"
+		],
+		"MEMORIES": []
+	  },
+	  "player1.position": {
+		"DESC": "The position of the first player.",
+		"DATA": "Point Guard",
+		"TYPE": "txt",
+		"STATE": "done",
+		"PROMPTS": [],
+		"MEMORIES": []
+	  },
+	  "player1.name": {
+		"DESC": "The name of the first player.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Make up an imaginary name of the starting point guard for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player1.timeonteam": {
+		"DESC": "How long the first player has been on the team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["How long has §player1.name§ been playing for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player1.university": {
+		"DESC": "Where the first player went to college.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["What university did §player1.name§ play basketball at?"],
+		"MEMORIES": []
+	  },
+	  "player1.image": {
+		"DESC": "An image of the first player in their team uniform.",
+		"DATA": "",
+		"TYPE": "img",
+		"STATE": "needed",
+		"PROMPTS": ["Generate an image of §player1.name§, the point guard for the §team.name§, who has been on the team for §player1.timeonteam§, wearing their team uniform in §team.colors§"],
+		"MEMORIES": []
+	  },
+	  "player2": {
+		"DESC": "Information about the starting shooting guard.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": [
+		  "§player2.position§",
+		  "§player2.name§",
+		  "§player2.timeonteam§",
+		  "§player2.university§",
+		  "§player2.image§"
+		],
+		"MEMORIES": []
+	  },
+	  "player2.position": {
+		"DESC": "The position of the second player.",
+		"DATA": "Shooting Guard",
+		"TYPE": "txt",
+		"STATE": "done",
+		"PROMPTS": [],
+		"MEMORIES": []
+	  },
+	  "player2.name": {
+		"DESC": "The name of the second player.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Make up an imaginary name of the starting shooting guard for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player2.timeonteam": {
+		"DESC": "How long the second player has been on the team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["How long has §player2.name§ been playing for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player2.university": {
+		"DESC": "Where the second player went to college.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["What university did §player2.name§ play basketball at?"],
+		"MEMORIES": []
+	  },
+	  "player2.image": {
+		"DESC": "An image of the second player in their team uniform.",
+		"DATA": "",
+		"TYPE": "img",
+		"STATE": "needed",
+		"PROMPTS": ["Generate an image of §player2.name§, the shooting guard for the §team.name§, who has been on the team for §player2.timeonteam§, wearing their team uniform in §team.colors§."],
+		"MEMORIES": []
+	  },
+	  "player3": {
+		"DESC": "Information about the starting small forward.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": [
+		  "§player3.position§",
+		  "§player3.name§",
+		  "§player3.timeonteam§",
+		  "§player3.university§",
+		  "§player3.image§"
+		],
+		"MEMORIES": []
+	  },
+	  "player3.position": {
+		"DESC": "The position of the third player.",
+		"DATA": "Small Forward",
+		"TYPE": "txt",
+		"STATE": "done",
+		"PROMPTS": [],
+		"MEMORIES": []
+	  },
+	  "player3.name": {
+		"DESC": "The name of the third player.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Make up an imaginary name of the starting small forward for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player3.timeonteam": {
+		"DESC": "How long the third player has been on the team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["How long has §player3.name§ been playing for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player3.university": {
+		"DESC": "Where the third player went to college.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["What university did §player3.name§ play basketball at?"],
+		"MEMORIES": []
+	  },
+	  "player3.image": {
+		"DESC": "An image of the third player in their team uniform.",
+		"DATA": "",
+		"TYPE": "img",
+		"STATE": "needed",
+		"PROMPTS": ["Generate an image of §player3.name§, the small forward for the §team.name§, who has been on the team for §player3.timeonteam§, wearing their team uniform in §team.colors§."],
+		"MEMORIES": []
+	  },
+	  "player4": {
+		"DESC": "Information about the starting power forward.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": [
+		  "§player4.position§",
+		  "§player4.name§",
+		  "§player4.timeonteam§",
+		  "§player4.university§",
+		  "§player4.image§"
+		],
+		"MEMORIES": []
+	  },
+	  "player4.position": {
+		"DESC": "The position of the fourth player.",
+		"DATA": "Power Forward",
+		"TYPE": "txt",
+		"STATE": "done",
+		"PROMPTS": [],
+		"MEMORIES": []
+	  },
+	  "player4.name": {
+		"DESC": "The name of the fourth player.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Make up an imaginary name of the starting power forward for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player4.timeonteam": {
+		"DESC": "How long the fourth player has been on the team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["How long has §player4.name§ been playing for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player4.university": {
+		"DESC": "Where the fourth player went to college.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["What university did §player4.name§ play basketball at?"],
+		"MEMORIES": []
+	  },
+	  "player4.image": {
+		"DESC": "An image of the fourth player in their team uniform.",
+		"DATA": "",
+		"TYPE": "img",
+		"STATE": "needed",
+		"PROMPTS": ["Generate an image of §player4.name§, the power forward for the §team.name§, who has been on the team for §player4.timeonteam§, wearing their team uniform team uniform in §team.colors§"],
+		"MEMORIES": []
+	  },
+	  "player5": {
+		"DESC": "Information about the starting center.",
+		"DATA": "",
+		"TYPE": "set",
+		"STATE": "needed",
+		"PROMPTS": [
+		  "§player5.position§",
+		  "§player5.name§",
+		  "§player5.timeonteam§",
+		  "§player5.university§",
+		  "§player5.image§"
+		],
+		"MEMORIES": []
+	  },
+	  "player5.position": {
+		"DESC": "The position of the fifth player.",
+		"DATA": "Center",
+		"TYPE": "txt",
+		"STATE": "done",
+		"PROMPTS": [],
+		"MEMORIES": []
+	  },
+	  "player5.name": {
+		"DESC": "The name of the fifth player.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["Make up an imaginary name of the starting center for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player5.timeonteam": {
+		"DESC": "How long the fifth player has been on the team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["How long has §player5.name§ been playing for the §team.name§?"],
+		"MEMORIES": []
+	  },
+	  "player5.university": {
+		"DESC": "Where the fifth player went to college.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": ["What university did §player5.name§ play basketball at?"],
+		"MEMORIES": []
+	  },
+	  "player5.image": {
+		"DESC": "An image of the fifth player in their team uniform.",
+		"DATA": "",
+		"TYPE": "img",
+		"STATE": "needed",
+		"PROMPTS": ["Generate an image of §player5.name§, the center for the §team.name§, who has been on the team for §player5.timeonteam§, wearing their team uniform in §team.colors§."],
+		"MEMORIES": []
+	  },
+	  "story" :{
+		"DESC": "A story about the basketball team.",
+		"DATA": "",
+		"TYPE": "txt",
+		"STATE": "needed",
+		"PROMPTS": [
+			"You are a marketeting copywriter and hype man for a professional basketball team. Write the voiceover for a short promotional video to build excitement for the upcoming season.",
+			"Introduce the team, the §team.name§. then intoroduce the starting players, and finish with team's slogan, §team.slogan§",
+			"The §player1.position§ is played by §player1.name§ a §player1.timeonteam§ veteran on the team who played college ball at §player1.university§.",
+			"The §player2.position§ is played by §player2.name§ a §player2.timeonteam§ veteran on the team who played college ball at §player2.university§.",
+		 	"The §player3.position§ is played by §player3.name§ a §player3.timeonteam§ veteran on the team who played college ball at §player3.university§.",
+			"The §player4.position§ is played by §player4.name§ a §player4.timeonteam§ veteran on the team who played college ball at §player4.university§.",
+			"The §player5.position§ is played by §player5.name§ a §player5.timeonteam§ veteran on the team who played college ball at §player5.university§.",
+			"Our mascot, §mascot.name§ looks forward to seeing you at a game at the §venue.name§ this season!"
+			],
+		"MEMORIES": []
+	  },
+	  "narration": {
+		"DESC": "A narration of the basketball story.",
+		"DATA": "",
+		"TYPE": "audio",
+		"STATE": "needed",
+		"PROMPTS": ["§story§"],
+		"MEMORIES": []
+	  },
+	"video": {
+		  "DESC": "A video showcasing the basketball team.",
+		  "DATA": "narration,venue.image,team.photo,team.photo,player1.image,player2.image,player3.image,player4.image,player5.image,mascot.image,mascot.name,venue.name,team.name,team.slogan,player1.name,player2.name,player3.name,player4.name,player5.name",
+		  "TYPE": "video",
+		  "STATE": "needed",
+		  "PROMPTS": [
+			"§narration§",
+			"§venue.image§",
+			"§team.photo§",
+			"§player1.image§",
+			"§player2.image§",
+			"§player3.image§",
+			"§player4.image§",
+			"§player5.image§",
+			"§mascot.image§",
+			"§venue.name§",
+			"§team.name§",
+			"§player1.name§",
+			"§player2.name§",
+			"§player3.name§",
+			"§player4.name§",
+			"§player5.name§",
+			"§team.slogan§"
+		  ],
+		  "MEMORIES": []
+		}
+	}
+  }

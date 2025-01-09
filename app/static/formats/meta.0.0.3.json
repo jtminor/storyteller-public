@@ -1,0 +1,25 @@
+{
+    "DISPLAY_NAME": "Format Name",
+    "DESC": "A short description of the document format",
+    "DEFAULT_MODELS": {
+        "<txt,img,audio,loc,video>" : "<model_config_name>"
+    },
+    "AGENTS": {
+        "<content_id>": {
+            "DESC":"A short description of the content.",
+            "DATA": "<intial content value>",
+            "TYPE": "<txt,img,audio,loc,video>",
+            "STATE": "<needed,generating,invalid,done,locked>",
+            "PROMPTS": ["A prompt string with §content.id§ replacement variable.","A second prompt string with no variables."],
+            "SYSTEM": "An optional system prompt.",
+            "MEMORIES": ["Predefined context for content generation.","Or prior content generation history."],
+            "MODEL": "<model_config_name>"
+        },
+        "<set_id>": {
+            "DESC":"A short description of the content set.",
+            "TYPE": "set",
+            "STATE": "<needed,generating,invalid,done,locked>",
+            "PROMPTS": ["§content.id§"]
+        }
+    }
+}
