@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template
-from flask import Blueprint,request, stream_with_context, abort, jsonify, render_template
+from flask import render_template
+from flask import request, stream_with_context, abort, jsonify, render_template
 from flask import current_app as app
 
 import logging
@@ -16,9 +16,8 @@ logging.basicConfig(
 #get the logger for API route logging
 logger = logging.getLogger(__name__) 
 
-bp = Blueprint('main', __name__)
 
-@bp.route('/')
+@app.route('/')
 def home():
 	"""Returns the status of the Storyteller application and its version.
 
@@ -43,7 +42,7 @@ def home():
 	return f"Storyteller ({version}) is live."
 
 
-@bp.route('/<string:doc_id>/test', methods=['GET'])
+@app.route('/<string:doc_id>/test', methods=['GET'])
 def test_api(doc_id):
 	"""Tests the Storyteller API by updating and retrieving content from a test document.
 
@@ -80,7 +79,7 @@ def test_api(doc_id):
 		logger.error(f"An unexpected error occurred: {e}")
 		abort(500, description="Internal Server Error")
 
-@bp.route("/<string:doc_id>/updatecontent", methods=['POST'])
+@app.route("/<string:doc_id>/updatecontent", methods=['POST'])
 def update_content(doc_id):
 	"""Updates content within the specified Storyteller document.
 
@@ -111,7 +110,7 @@ def update_content(doc_id):
 		logger.info(f"Content value updated for id {this_content_id}")
 	return str(True)
 
-@bp.route("/<string:doc_id>/getcontent", methods=['GET'])
+@app.route("/<string:doc_id>/getcontent", methods=['GET'])
 def get_content(doc_id):
 	"""Retrieves content from the specified Storyteller document.
 
@@ -160,7 +159,7 @@ def get_content(doc_id):
 		abort(400, description=str(e))
 
 
-@bp.route("/<string:doc_id>/generatecontent", methods=['POST'])
+@app.route("/<string:doc_id>/generatecontent", methods=['POST'])
 def generate_content(doc_id):
 	"""Generates content for the specified IDs in the Storyteller document.
 
@@ -212,7 +211,7 @@ def generate_content(doc_id):
 	return str(all(result_checks))
 
 
-@bp.route("/<string:doc_id>/getcontentstate", methods=['GET'])
+@app.route("/<string:doc_id>/getcontentstate", methods=['GET'])
 def get_content_state(doc_id):
 	"""Retrieves the generation state of a content item.
 
@@ -255,7 +254,7 @@ def get_content_state(doc_id):
 		logger.error(f"An error occurred while getting content state: {e}")
 		abort(500, description="Internal Server Error")
 
-@bp.route("/<string:doc_id>/setcontentstate", methods=['POST'])
+@app.route("/<string:doc_id>/setcontentstate", methods=['POST'])
 def setContentState(doc_id):
 	"""Sets the generation state of a content item.
 
@@ -308,7 +307,7 @@ def setContentState(doc_id):
 		abort(500, description="Internal Server Error")
 
 
-@bp.route("/<string:doc_id>/indexcontent", methods=['GET'])
+@app.route("/<string:doc_id>/indexcontent", methods=['GET'])
 def get_content_index(doc_id):
 	"""Retrieves an index of all content items in the document.
 
@@ -342,7 +341,7 @@ def get_content_index(doc_id):
 		logger.error(f"Error processing indexcontent request: {e}")
 		abort(500, description="Internal Server Error")
 
-@bp.route("/<string:doc_id>/formatcontent", methods=['POST'])
+@app.route("/<string:doc_id>/formatcontent", methods=['POST'])
 def setFormat(doc_id):
 	"""Applies a format to the Storyteller document. This loads the new format's Agents but, does not overwrite overwrite any existing format.
 
@@ -374,7 +373,7 @@ def setFormat(doc_id):
 		logger.error(f"Error processing setFormat request: {e}")
 		abort(400, description=str(e))
 
-@bp.route("/<string:doc_id>/streamcontent",methods=['GET'])
+@app.route("/<string:doc_id>/streamcontent",methods=['GET'])
 def stream_content(doc_id):
 	"""Streams content updates using Server-Sent Events (SSE).
 
@@ -454,7 +453,7 @@ def stream_content(doc_id):
 	return app.response_class(stream_with_context(message_generator()),mimetype='text/event-stream')
 
 
-@bp.route('/<string:doc_id>/inspect', methods=['GET'])
+@app.route('/<string:doc_id>/inspect', methods=['GET'])
 def inspect_document(doc_id):
 	"""Renders a document inspector interface for testing and development.
 
@@ -515,7 +514,7 @@ def inspect_document(doc_id):
 						story_map=story_map,
 						sorted_keys=sorted_keys)
 
-@bp.route('/<string:doc_id>/visualize', methods=['GET'])
+@app.route('/<string:doc_id>/visualize', methods=['GET'])
 def visualize_graph(doc_id):
 	"""Renders a graph visualization of content dependencies.
 
@@ -557,7 +556,7 @@ def visualize_graph(doc_id):
 	return render_template('visualizer.html', doc_id=doc_id, content_map=content_map,node_list=content_ids, graph_dependents_map=storyteller.format.dependents_map, graph_depends_on_map=storyteller.format.depends_on_map)
 
 
-@bp.route("/<string:doc_id>/delete", methods=['DELETE'])
+@app.route("/<string:doc_id>/delete", methods=['DELETE'])
 def delete_document(doc_id):
 	"""Deletes the specified Storyteller document and associated data.
 
