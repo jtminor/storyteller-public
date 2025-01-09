@@ -1,4 +1,5 @@
 # Storyteller (Public Demo Version)
+
 ## What is the Storyteller Platform? 
 The Storyteller Platform is a new kind of CMS which we call a "generative streaming CMS". A traditional CMS is a database specialized to store and retreive content, usually html documents or other media. In a traditional CMS, content only exists if a user enters it. If content is requested and doesn't exist, an error or blank document is returned to the user. 
 
@@ -6,116 +7,21 @@ The "generative" part of the generative streaming CMS changes that expectation, 
 
 The "streaming" part reflects the different way content is delivered in the system. Rather than provide a synchronous complete document response when content is generated, the platform publishes sub-document level content, and pushes those content items to the client as Server Sent Events. These events include semantic content identifiers which identiy the pieces place in the content graph, allowing the system to continously deliver content in chunks via an asynchronous stream and the client to place those chunks based on their identity.
 
-## Setting Up a Local Development Environment
-These instructions will guide you through setting up and running Storyteller in a local development environment.
+## Quick Demo
 
-### Prerequisite Installations
-- VS Code: Download and install the latest version of Visual Studio Code from https://code.visualstudio.com/.
-- Python: Download and install the latest version of Python from https://www.python.org/downloads/. Ensure you select the option to add Python to your PATH during installation. It is strongly recommended that you do not use the default system installation and site packages. 
-- Google Cloud SDK: Download and install the Google Cloud SDK from https://cloud.google.com/sdk/docs/install. This will provide you with the gcloud command-line tool.
+Color example using inspector (screenshots)
 
-### Install VS Code Extensions
-Open VS Code and navigate to the Extensions view (Ctrl+Shift+X or Cmd+Shift+X).
-Search for and install the following extensions:
-- Python
-- Google Cloud Code
+## Content Creation Example
+### Tarot Deck
+### Basketball Promo Video
+### Your Personal Odyssey
 
-### Create a Virtual Environment
-- Open a terminal in VS Code (Terminal > New Terminal).
-- Navigate to the root directory of your storyteller-3 project.
-- Create a virtual environment using the following command:
-`python -m venv .venv`
-- Activate the virtual environment:
--- On Windows:
-`.venv\Scripts\activate`
--- On macOS/Linux:
-`source .venv/bin/activate`
-
-### Install Google CLI and Authenticate Google Cloud Project
-- Install the Google Cloud CLI by following the instructions at https://cloud.google.com/sdk/docs/install
-- Open the VS Code command palette (Ctrl+Shift+P or Cmd+Shift+P).
-- Search for and select "Google Cloud: Login"
-- Follow the prompts to authenticate with your Google Cloud account.
-- Once logged in, select the Google Cloud project storyteller-3.
-
-### Install Python Requirements
-- Open a terminal in VS Code (Terminal > New Terminal).
-- Ensure your virtual environment is activated.
-- Select Python 3.12 or higher as you interpreter by pressing Cmd+Shift+P and then running the "Python Select Interpreter" command and select the required interpreter.
-- Install the project dependencies from the requirements.txt file:
-`pip install -r requirements.txt`
-
-### Setting Up a Post-Commit Hook to Update Version File
-If you want, you can embed the github revision hash in the message returned for /
-
-You can create or edit the `post-commit` file like this:
-
-```bash
-touch .git/hooks/post-commit
-chmod +x .git/hooks/post-commit
-```
-And add the following text to the file:
-
-```bash
-#! /bin/bash
-
-# Get the short commit hash
-VERSION=$(git rev-parse --short HEAD)
-
-# Write the version to version.txt
-echo $VERSION > version.txt
-```
-
-### Install Ollama (Optional)
-To run local models the platform uses the Ollama local web server. To install and set up Ollama see the github repo here: https://github.com/ollama/ollama
-
-### Run Flask App Locally
-- From the terminal, navigate to the directory containing your Flask app's entry point (e.g., app.py or main.py).
-- Run the Flask app using the following command:
-`flask run`
-
-This will typically start the development server at http://127.0.0.1:5000/. You can access the storyteller-3 application in your web browser at this address.
-
-## Testing
-### Testing the API Using Pytest
-- Navigate to Test Directory:
- `cd tests`
-
-- Run Pytest of the API basic functionality:
-` pytest test_routes.py `
-
-- Run Pytest of the Generation functionality and all generation actions:
-` pytest test_generation.py `
-
-- Review Test Results:
-Pytest will provide a detailed report in the terminal, indicating which tests passed, failed, or were skipped.
-
-### Testing the API Using the apitestclient.html Test Client
-Naviate to http://127.0.0.1:5000/static/apitest.client (or equivalent IP and port for your local environment). 
-
-This page includes full API documentation and a simple UI to test each API endpoint and view the response.
-
-The javascript on this page can also be used as an example impelmentation of the API for a web client.
-
-### Checking Status Using the / "Home" Route
-The / ("home") route of the API returns a string verifying the platform is live. This can be used to determine if the platform is reachable and running when debugging.
-
-### Running A Basic Test Using the /test Endpoint
-You can use the /{doc_id}/test endpoint to run basic unit tests to verify all endpoints are functional. It will return a 200 OK status code and a string verifying that test data was successfully updated and retrieved. This is similar to running the pytests, but from the API.
-
-### View and Edit a document using the Inspector interface
+## The Inspector Web UI
 You can use the /{doc_id}/inspect endpoint to view the Format and Story for a document and generate, update and stream all content items and events for the document.
 
-### Visualize the format graph using the Visualizer interface
-You can use the /{doc_id}/inspect endpoint to view a visualization of the Format graph for a given document.  This visualization provides a visual representation of the relationships between content items within the document's format, allowing for a better understanding of the document's structure and content dependencies.
+### Inspector intros/howto (create, index, generate, update, status)
 
-## Deployment
-Releases are auto-deployed to the known stable production URL by creating a release with the tag "prod-release" in the repo. 
-
-In order to test and deploy a branch or for developer testing, please create a personal branch and use a branch based trigger to deploy to an anlternate test instance.
-
-## REST API
-
+## The REST API
 - **POST /{doc_id}/generatecontent**: Generate content items. Creates new values for the requested items, even if there are existing values.
 - **GET /{doc_id}/getcontent**: Retrieve existing content items if they have already been generated or stored by the user. 
 - **POST /{doc_id}/updatecontent**: Update content items.
@@ -124,7 +30,18 @@ In order to test and deploy a branch or for developer testing, please create a p
 
 Note: This is a simplified summary. Refer to the `apitestclient.html` documentation for detailed information on request parameters, response formats, and error handling. 
 
-## Usage Example
+
+### Testing the API Using the apitestclient.html Test Client
+Naviate to http://127.0.0.1:5000/static/apitest.client (or equivalent IP and port for your local environment). 
+
+This page includes full API documentation and a simple UI to test each API endpoint and view the response.
+
+
+### Checking Status Using the / "Home" Route
+The / ("home") route of the API returns a string verifying the platform is live. This can be used to determine if the platform is reachable and running when debugging.
+
+
+## API Usage Examples
 1. **Start listening to a stream:**
    - **Request:** `GET /example_doc/streamcontent`
    - **Response:** An open stream connection. Content events will be pushed through this connection as they are generated.
@@ -370,7 +287,7 @@ Content Agents can be in one of several states, reflecting their progress in the
 
 Changes in agent state are published as RESTATE event types.
 
-### System Pronots
+### System Prompts
 For sevices and models that support the concept of a System prompt, an agent may specfiy a System value. This string will be used as the system prompt if the Model supports it. Otherwise it will be appended as the first message passed to the model as a normal prompt.
 
 ### Prompts and Content Variables

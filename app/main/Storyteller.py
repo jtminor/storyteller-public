@@ -18,8 +18,7 @@ from google.cloud import texttospeech
 
 import vertexai
 from vertexai.preview.vision_models import ImageGenerationModel
-from vertexai.language_models import TextGenerationModel
-from vertexai.generative_models import GenerativeModel, Part, SafetySetting
+from vertexai.generative_models import GenerativeModel, SafetySetting
 from vertexai.preview.vision_models import ImageGenerationResponse
 
 
