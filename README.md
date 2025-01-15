@@ -11,15 +11,23 @@ The "streaming" part reflects the different way content is delivered in the syst
 
 Color example using inspector (screenshots)
 
-## Content Creation Example
-### Tarot Deck
-### Basketball Promo Video
-### Your Personal Odyssey
+### Key terms: document, format, content
+#### Create a document (load the inspector)
+#### Format a document (index) 
+#### Creating content (generate)
+#### Combining content (prompt variables and videos)
+#### Editing content (set)
+#### Rebuilding content after editing (states and dependency)
 
 ## The Inspector Web UI
 You can use the /{doc_id}/inspect endpoint to view the Format and Story for a document and generate, update and stream all content items and events for the document.
 
 ### Inspector intros/howto (create, index, generate, update, status)
+
+## More Content Creation Examples
+### Custom Tarot Deck and Reading
+### Basketball Promo Video
+### Your Personal Odyssey
 
 ## The REST API
 
@@ -321,7 +329,7 @@ Currently the platform supports Google Vertex, OpenAI and Ollama (local) out of 
 ### Model Configuration
 Model Configurations define the basic context for a generation reqeust. In addition to the service name, model name and model secret (if neededd), a configuration may include a paramters dictionary. This dictionary can be used to pass arbitary or model specific parameters as part of a generation request. For example, an image ModelConfiguration may include the size or quality settings for a specific model's api.
 
-### Adding or Editing ModelConfiguration
+### Adding or Editing Model Configurations
 Model Configurations are defined as JSON objects in the model_configs.json file which is stored in the /main directory with the core code. Model Configuration objects must include a service name, model name and model secret, even if those values are empty strings.
 
 To add a new model configuration for an existing service, create a new Configuration object and copy the existing Configuration for the service name and secret, and change the model name to your target model. You may also need to add or edit paramters. 
