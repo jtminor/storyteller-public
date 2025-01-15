@@ -445,9 +445,9 @@ function getContentState(doc_id) {
             <h3>/</h3>
             <p>
                 <strong>Method:</strong> GET<br>
-                <strong>Description:</strong> Returns a string indicating that the Storyteller API is live.<br>
+                <strong>Description:</strong> Returns a string indicating that which version of Storyteller API is live.<br>
                 <strong>Response:</strong><br>
-                <code>Storyteller is live.</code>
+                <code>Storyteller version v0.0.1 (0000002) is live.</code>
             </p>
         </div>
     
@@ -535,7 +535,7 @@ function getContentState(doc_id) {
                 <ul>
                     <li><strong>doc_id (string, required):</strong> The ID of the document.</li>
                 </ul>
-                <strong>Request Body (JSON string):</strong><br> The full name of the format to use (e.g., "test.0.0.2")<br>
+                <strong>Request Body (JSON string):</strong><br> The name of the format to use (e.g., "test")<br>
                 <strong>Response:</strong><br>
                 <code>Content formatted successfully.</code> (or an appropriate success message)
             </p>
@@ -641,7 +641,7 @@ function getContentState(doc_id) {
     <div class="section">
         <h3>Format Content</h3>
         <label for="formatData">Format name:</label><br>
-        <input type="text" id="formatData"] value="test.0.0.2"></input><br>
+        <input type="text" id="formatData"] value="test"></input><br>
         <button onclick="formatContent(document.getElementById('doc_id').value)">Format Content</button>
         <p id="formatResult"></p>
     </div>

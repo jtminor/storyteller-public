@@ -35,7 +35,7 @@ def test_home_page(test_client):
 		with open(version_file) as f:
 			version = f.read().strip()
 
-	assert response.data.decode('utf-8') == f"Storyteller ({version}) is live."
+	assert response.data.decode('utf-8') == f"Storyteller {version} is live."
 
 def test_fomatcontent(test_client):
 	""" Test formatting content """

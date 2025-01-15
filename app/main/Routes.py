@@ -37,7 +37,7 @@ def home():
 	except Exception as e:
 		logger.error(f"Error reading version.txt: {e}")
 
-	return f"Storyteller ({version}) is live."
+	return f"Storyteller {version} is live."
 
 
 @main_bp.route('/<string:doc_id>/test', methods=['GET'])
