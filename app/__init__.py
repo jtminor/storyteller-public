@@ -2,12 +2,15 @@
 Create and configure the Flask application.
 """
 from flask import Flask
-from app import main
 from flask_cors import CORS
 
+from app.main import Routes
+
 def create_app():
-    """Create and configure the Dotes Flask application."""
+    """Create and configure the Flask application."""
     app = Flask(__name__)
     CORS(app)
+
+    app.register_blueprint(Routes.main_bp)
 
     return app

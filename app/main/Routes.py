@@ -1,31 +1,29 @@
-from flask import render_template
-from flask import request, stream_with_context, abort, jsonify, render_template
-from flask import current_app as app
+from flask import request, stream_with_context, abort, jsonify, render_template, current_app, Blueprint
 
 import logging
 import time
 
 from app.main.Storyteller import Storyteller, Content, Publisher, Agent, AgentStore
 
+main_bp = Blueprint('main', __name__)  # 'main' is the blueprint name
+
 # Configure the root logger
 logging.basicConfig(
 	level=logging.INFO,  # Set the default logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-	format='STORYTELLER3 - %(asctime)s - %(name)s - %(levelname)s - %(message)s' 
+	format='STORYTELLER-PUBLIC - %(asctime)s - %(name)s - %(levelname)s - %(message)s' 
 )
 
 #get the logger for API route logging
 logger = logging.getLogger(__name__) 
 
 
-@app.route('/')
+@main_bp.route('/')
 def home():
 	"""Returns the status of the Storyteller application and its version.
 
 	Returns:
 		str: A message indicating the application's status and version.
 	"""
-	# ... (function implementation remains unchanged)
-
 	
 	logger.info("GET request received for root route.")
 
@@ -42,7 +40,7 @@ def home():
 	return f"Storyteller ({version}) is live."
 
 
-@app.route('/<string:doc_id>/test', methods=['GET'])
+@main_bp.route('/<string:doc_id>/test', methods=['GET'])
 def test_api(doc_id):
 	"""Tests the Storyteller API by updating and retrieving content from a test document.
 
@@ -79,7 +77,7 @@ def test_api(doc_id):
 		logger.error(f"An unexpected error occurred: {e}")
 		abort(500, description="Internal Server Error")
 
-@app.route("/<string:doc_id>/updatecontent", methods=['POST'])
+@main_bp.route("/<string:doc_id>/updatecontent", methods=['POST'])
 def update_content(doc_id):
 	"""Updates content within the specified Storyteller document.
 
@@ -110,7 +108,7 @@ def update_content(doc_id):
 		logger.info(f"Content value updated for id {this_content_id}")
 	return str(True)
 
-@app.route("/<string:doc_id>/getcontent", methods=['GET'])
+@main_bp.route("/<string:doc_id>/getcontent", methods=['GET'])
 def get_content(doc_id):
 	"""Retrieves content from the specified Storyteller document.
 
@@ -159,7 +157,7 @@ def get_content(doc_id):
 		abort(400, description=str(e))
 
 
-@app.route("/<string:doc_id>/generatecontent", methods=['POST'])
+@main_bp.route("/<string:doc_id>/generatecontent", methods=['POST'])
 def generate_content(doc_id):
 	"""Generates content for the specified IDs in the Storyteller document.
 
@@ -211,7 +209,7 @@ def generate_content(doc_id):
 	return str(all(result_checks))
 
 
-@app.route("/<string:doc_id>/getcontentstate", methods=['GET'])
+@main_bp.route("/<string:doc_id>/getcontentstate", methods=['GET'])
 def get_content_state(doc_id):
 	"""Retrieves the generation state of a content item.
 
@@ -254,7 +252,7 @@ def get_content_state(doc_id):
 		logger.error(f"An error occurred while getting content state: {e}")
 		abort(500, description="Internal Server Error")
 
-@app.route("/<string:doc_id>/setcontentstate", methods=['POST'])
+@main_bp.route("/<string:doc_id>/setcontentstate", methods=['POST'])
 def setContentState(doc_id):
 	"""Sets the generation state of a content item.
 
@@ -307,7 +305,7 @@ def setContentState(doc_id):
 		abort(500, description="Internal Server Error")
 
 
-@app.route("/<string:doc_id>/indexcontent", methods=['GET'])
+@main_bp.route("/<string:doc_id>/indexcontent", methods=['GET'])
 def get_content_index(doc_id):
 	"""Retrieves an index of all content items in the document.
 
@@ -341,7 +339,7 @@ def get_content_index(doc_id):
 		logger.error(f"Error processing indexcontent request: {e}")
 		abort(500, description="Internal Server Error")
 
-@app.route("/<string:doc_id>/formatcontent", methods=['POST'])
+@main_bp.route("/<string:doc_id>/formatcontent", methods=['POST'])
 def setFormat(doc_id):
 	"""Applies a format to the Storyteller document. This loads the new format's Agents but, does not overwrite overwrite any existing format.
 
@@ -373,7 +371,7 @@ def setFormat(doc_id):
 		logger.error(f"Error processing setFormat request: {e}")
 		abort(400, description=str(e))
 
-@app.route("/<string:doc_id>/streamcontent",methods=['GET'])
+@main_bp.route("/<string:doc_id>/streamcontent",methods=['GET'])
 def stream_content(doc_id):
 	"""Streams content updates using Server-Sent Events (SSE).
 
@@ -450,10 +448,9 @@ def stream_content(doc_id):
 	if publisher.has_content:
 		publisher.push_content(Content("_start","Start the queue.","START"))
 	logger.info("Event stream started.")
-	return app.response_class(stream_with_context(message_generator()),mimetype='text/event-stream')
+	return current_app.response_class(stream_with_context(message_generator()),mimetype='text/event-stream')
 
-
-@app.route('/<string:doc_id>/inspect', methods=['GET'])
+@main_bp.route('/<string:doc_id>/inspect', methods=['GET'])
 def inspect_document(doc_id):
 	"""Renders a document inspector interface for testing and development.
 
@@ -514,49 +511,7 @@ def inspect_document(doc_id):
 						story_map=story_map,
 						sorted_keys=sorted_keys)
 
-@app.route('/<string:doc_id>/visualize', methods=['GET'])
-def visualize_graph(doc_id):
-	"""Renders a graph visualization of content dependencies.
-
-	Args:
-		doc_id (str): The document ID.
-
-	Returns:
-		html: The rendered graph visualization.
-
-	Raises:
-		400 Bad Request: If 'doc_id' is missing.
-	"""
-	logger.info(f"GET request received for studio interface with document id {doc_id}")
-	if not doc_id:
-		abort(400, description="Missing 'doc_id' parameter")
-		logger.warning("Missing 'doc_id' parameter in studio request.")
-	storyteller = Storyteller(doc_id)
-	content_index = storyteller.format.get_content_index()
-	content_ids = [content.id for content in content_index]
-
-	if not storyteller.format.dependents_map:
-		storyteller.format.build_edge_links()
-		storyteller.format.populate_edge_maps()
-
-	content_objects = storyteller.story.get_all_content()
-	content_map = {}
-	for content_item in content_objects:
-		if content_item.id.startswith("_"):
-			continue
-		elif content_item.data.startswith("http"):
-			content_map[content_item.id] = content_item.data
-	# Add all keys from dependents_map and depends_on_map to content_ids as a backwards compability hack
-	content_ids.extend(storyteller.format.dependents_map.keys())
-	content_ids.extend(storyteller.format.depends_on_map.keys())
-	# Dedupe the list
-	content_ids = list(set(content_ids))
-
-
-	return render_template('visualizer.html', doc_id=doc_id, content_map=content_map,node_list=content_ids, graph_dependents_map=storyteller.format.dependents_map, graph_depends_on_map=storyteller.format.depends_on_map)
-
-
-@app.route("/<string:doc_id>/delete", methods=['DELETE'])
+@main_bp.route("/<string:doc_id>/delete", methods=['DELETE'])
 def delete_document(doc_id):
 	"""Deletes the specified Storyteller document and associated data.
 

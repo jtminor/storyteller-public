@@ -1,6 +1,6 @@
 {
   "DISPLAY_NAME": "Extened Test Format",
-  "DESC": "A format for testing.",
+  "DESC": "A format for testing all media types and service providers.",
   "AGENTS": {
     "test" : {
       "DESC": "All possible test content.",
@@ -71,7 +71,8 @@
       "DATA": "test.value",
       "TYPE": "txt",
       "STATE": "needed",
-      "PROMPTS": ["You are a bot that responds with random crayon colors. Pick something surpising. Tell me single word for the crayon color name. DO NOT tell me other information or provide any explation."],
+      "PROMPTS": ["Pick a random crayon color."],
+      "SYSTEM": "You are a bot that responds with random crayon colors. Pick something surpising. Tell me single word for the crayon color name. DO NOT tell me other information or provide any explation.",
       "MEMORIES": []
     },
     "test.genset.loc": {
@@ -109,6 +110,106 @@
         "§test.genset.audio§"
       ],
       "MEMORIES": []
+    },
+    "test.openaiset" :
+    {
+        "DESC": "A set of content used to test openai generation and content state functionality.",
+        "DATA": "",
+        "TYPE":"set",
+        "STATE":"needed",
+        "PROMPTS":["§test.openai.text§","§test.openai.image§","§test.openai.audio§"],
+        "MEMORIES":[]
+
+    },
+    "test.openai.text" : {
+      "DESC": "A test of openai text generation.",
+      "DATA": "",
+      "TYPE": "txt",
+      "STATE": "needed",
+      "PROMPTS": ["Write a short story about a cat."],
+      "MEMORIES": [],
+      "MODEL" : "openai-text-basic"
+    },
+    "test.openai.image" : {
+      "DESC": "A test of openai image generation.",
+      "DATA": "",
+      "TYPE": "img",
+      "STATE": "needed",
+      "PROMPTS": ["Draw an image of a cat."],
+      "MEMORIES": [],
+      "MODEL" : "openai-image-basic"
+    },
+    "test.openai.audio" : {
+      "DESC": "A test of openai audio generation.",
+      "DATA": "",
+      "TYPE": "audio",
+      "STATE": "needed",
+      "PROMPTS": ["Generate an audio clip of a cat."],
+      "MEMORIES": [],
+      "MODEL" : "openai-speech-basic"
+    },
+    "test.testproviderset" : {
+        "DESC": "A set of content used to test testprovider generation and content state functionality.",
+        "DATA": "",
+        "TYPE":"set",
+        "STATE":"needed",
+        "PROMPTS":["§test.testprovider.text§","§test.testprovider.image§","§test.testprovider.audio§","§test.testprovider.location§","§test.testprovider.video§"],
+        "MEMORIES":[]
+    },
+    "test.testprovider.text" : {
+      "DESC": "A test of testprovider text generation.",
+      "DATA": "",
+      "TYPE": "txt",
+      "STATE": "needed",
+      "PROMPTS": ["Write a short story about a dog."],
+      "MEMORIES": [],
+      "MODEL" : "test"
+    },
+    "test.testprovider.image" : {
+      "DESC": "A test of testprovider image generation.",
+      "DATA": "",
+      "TYPE": "img",
+      "STATE": "needed",
+      "PROMPTS": ["Draw an image of a dog."],
+      "MEMORIES": [],
+      "MODEL" : "test"
+    },
+    "test.testprovider.audio" : {
+      "DESC": "A test of testprovider audio generation.",
+      "DATA": "",
+      "TYPE": "audio",
+      "STATE": "needed",
+      "PROMPTS": ["Generate an audio clip of a dog."],
+      "MEMORIES": [],
+      "MODEL" : "test"  
+  },
+    "test.testprovider.location" : {
+      "DESC": "A test of testprovider location generation.",
+      "DATA": "",
+      "TYPE": "loc",
+      "STATE": "needed",
+      "PROMPTS": ["Pick a location."],
+      "MEMORIES": [],
+      "MODEL" : "test" 
+  },
+    "test.testprovider.video" : {
+      "DESC": "A test of testprovider video generation.",
+      "DATA": "",
+      "TYPE": "video",
+      "STATE": "needed",
+      "PROMPTS": ["§test.testprovider.text","§test.testprovider.audio§","§test.testprovider.image"],
+      "MEMORIES": [],
+      "MODEL" : "test"
+    },
+    "test.ollama.txt" : {
+      "DESC": "A test of ollama text generation.",
+      "DATA": "",
+      "TYPE": "txt",
+      "STATE": "needed",
+      "PROMPTS": ["Write a short story about a bird."],
+      "MEMORIES": [],
+      "MODEL" : "ollama-text-basic"
     }
+
   }
 }

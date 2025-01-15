@@ -1,10 +1,8 @@
 import requests
-from urllib.parse import urlparse
 from io import BytesIO
 
 import numpy as np
 from PIL import Image
-import cv2
 
 from moviepy.editor import *
 import tempfile
@@ -13,7 +11,6 @@ import logging
 import math
 from PIL import ImageFilter
 
-import random
 
 logger = logging.getLogger(__name__) 
 logger.setLevel(logging.INFO)
@@ -23,30 +20,6 @@ class VideoComposer:
 	"""Interface for moviepy service to make videos from content items using a hand coded template."""
 
 	video_size = (1920,1080)
-	snowflakes = []  # Class attribute to store snowflake positions
-
-	def process_background(background_path, scene_duration, zoom_ratio=0.04, max_blur_radius=10):
-		"""
-		Processes the background image and applies zoom-in effects.
-
-		Parameters:
-		- background_path (str): Path to the background image file.
-		- scene_duration (float): Duration of the scene in seconds.
-		- zoom_ratio (float): The ratio for the zoom-in effect.
-		- max_blur_radius (int): Maximum blur radius for the effect.
-
-		Returns:
-		- slide (ImageClip): Processed video clip with applied effects.
-		"""
-		logger.info(f'process_background: {background_path}')
-		
-		# Load and resize the image to fit the video size
-		slide = ImageClip(background_path).set_duration(scene_duration)
-		slide = slide.resize(newsize=VideoComposer.video_size)  # Resize to fit the video frame
-		
-		# Apply zoom-in effects
-		effects = VideoEffects(zoom_ratio=zoom_ratio, max_blur_radius=max_blur_radius)
-		return effects.zoom_in_effect(slide)
 
 	def create_text_clip(caption, scene_duration, start_delay=0, 
 						text_size=48, title_font='Liberation-Sans', title_color='yellow'):
@@ -81,116 +54,7 @@ class VideoComposer:
 
 		return txt_clip
 	
-	def transform_list_to_script(content_list):
-		"""
-		Transforms a list of Content objects into a nested dictionary structure.
-		
-		If the `id` field in a Content object contains a "scene#" prefix (e.g., "scene1.key"),
-		the resulting dictionary will nest keys under that scene. If no prefix is present, 
-		the key will be placed at the top level of the dictionary.
-		
-		Args:
-			content_list (list): A list of Content objects, where each object has `id`, 
-								`data`, and `type` attributes. Pass 'None' for a preset list for testing
-
-		Returns:
-			dict: A nested dictionary with scene keys as top-level entries and their associated
-				properties. Keys without a scene prefix are placed at the top level.
-		"""
-		nested_dict = {}
-
-		if (content_list == None):
-			nested_dict = {
-				'scene3': {
-					'polaroid': {
-						'data': 'https://storage.googleapis.com/storyteller-media/rS5uM41t.png',
-						'type': 'img'
-					},
-					'background': {
-						'data': 'https://storage.googleapis.com/storyteller-media/wm8o66XM.png',
-						'type': 'img'
-					},
-					'caption': {
-						'data': 'Enjoy the beautiful winter weather in Kona, Hawaii!',
-						'type': 'txt'
-					}
-				},
-				'scene2': {
-					'polaroid': {
-						'data': 'https://storage.googleapis.com/storyteller-media/zbOAG225.png',
-						'type': 'img'
-					},
-					'background': {
-						'data': 'https://storage.googleapis.com/storyteller-media/EoVsQDt-.png',
-						'type': 'img'
-					},
-					'caption': {
-						'data': 'Wishing you were here on the beautiful beaches of Waikiki, Hawaii!',
-						'type': 'txt'
-					}
-				},
-				'scene1': {
-					'polaroid': {
-						'data': 'https://storage.googleapis.com/storyteller-media/XPdEo9EZ.jpeg',
-						'type': 'img'
-					},
-					'background': {
-						'data': 'https://storage.googleapis.com/storyteller-media/-yzPzIds.png',
-						'type': 'img'
-					},
-					'caption': {
-						'data': 'A family of four enjoys a beautiful day in Hawaii.',
-						'type': 'txt'
-					}
-				}
-			}
-
-			logger.info(f"create_beacon_video: returning debug data-structure")
-			return nested_dict
-
-		for content in content_list:
-			parts = content.id.split(".")
-			if len(parts) == 2:
-				scene, key = parts
-				if scene not in nested_dict:
-					nested_dict[scene] = {}
-				nested_dict[scene][key] = {"data": content.data, "type": content.type}
-			else:
-				key = parts[0]
-				nested_dict[key] = {"data": content.data, "type": content.type}
-
-		# logger.info(nested_dict)
-
-		return nested_dict
 	
-	def create_slideshow_video(image_list):
-		"""Creates a slideshow video from a list of image URLs."""
-		
-		image_urls = [img_url for img_url in image_list if urlparse(img_url).scheme in ('http', 'https')]
-		if not image_urls:
-			raise ValueError("No valid image URLs found in prompts.")
-		clips = []
-		
-		# Load images as ImageClips
-		for frame_url in image_urls:
-			if frame_url == '': continue
-			response = requests.get(frame_url)
-			response.raise_for_status()  # Raise an error for bad status codes
-
-			image = Image.open(BytesIO(response.content))
-			image_np = np.array(image)
-			slide = ImageClip(image_np).set_duration(4)
-			clips.append(slide)
-
-		# Concatenate clips into a single video
-		final_clip = CompositeVideoClip([slides_clip]+text_clips)
-
-		with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as temp_video_file:
-			slides_clip.write_videofile(temp_video_file.name, fps=24, codec='libvpx')
-			slides_clip.close()
-			temp_video_path = temp_video_file.name
-		return temp_video_path
-
 	def create_video(content_list):
 		"""Creates a video from a list of content items."""
 		audio_list = []
@@ -198,7 +62,7 @@ class VideoComposer:
 		text_list = []
 
 		title_font = 'Liberation-Sans'
-		title_color = 'yellow'
+		title_color = 'white'
 
 		for content_item in content_list:
 			if content_item.data == None: continue
@@ -262,19 +126,8 @@ class VideoComposer:
 			# clips.append(slide)
 			clips.append(output_clip)
 
-			image_size = image.size
-
-			polaroid = PolaroidFrame(target_height=VideoComposer.video_size[1], border_size=20).create("https://storage.googleapis.com/storyteller-media/c93bLZpn.png")
-			polaroid = polaroid.rotate(27, expand=True)  # Rotate with expansion to fit rotated bounds
-
-			# # Convert the PIL image to an ImageClip and set its duration
-			polaroid = ImageClip(np.array(polaroid)).set_duration(slide_duration+2)
-			start_delay = slide_duration * 1.5
-			polaroid = polaroid.set_start(start_delay)
-			polaroid = polaroid.set_position((825,175))
-
 		# Concatenate clips into a single video (audio added below)
-		slides_clip = concatenate_videoclips(clips + [polaroid], method="compose")
+		slides_clip = concatenate_videoclips(clips, method="compose")
 
 		# Create text clips
 		text_clips = []
@@ -329,20 +182,6 @@ class VideoComposer:
 
 		return temp_video_path
 
-	
-	def getStyleConfigFromName(style_name):
-		"""Selects font, color, and overlay based on style name."""
-		logger.debug(f"Getting style config for {style_name}")
-		style_configs = {
-			"default": ("Liberation-Sans", "white", None),
-			"Summer Sun": ("Liberation-Sans", "yellow", None),
-			"Winter Holidays": ("Liberation-Sans", "white", "snow"),
-			"Spring Flowers": ("Liberation-Sans", "pink", None),
-			"Autumnal": ("Liberation-Sans", "orange", None),
-			"Friendly Celebration": ("Liberation-Sans", "yellow", None),
-			"Family Feelings": ("Liberation-Sans", "purple", None)
-		}
-		return style_configs.get(style_name, style_configs["default"])
 
 class VideoEffects:
     def __init__(self, zoom_ratio=0.04, max_blur_radius=10):

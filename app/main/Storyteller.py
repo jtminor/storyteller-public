@@ -31,20 +31,20 @@ from .LoggerManager import LoggerManager
 
 #Google Cloud Storage Info
 GC_PROJECT_ID = "storyteller3"
-STORY_COLLECTION_NAME = "dotes"
-QUEUE_COLLECTION_NAME = "queue"
+STORY_COLLECTION_NAME = "public_stories"
+QUEUE_COLLECTION_NAME = "public_queues"
 
-GCS_MEDIA_BUCKET_NAME = "storyteller-media"
-GCS_AGENT_BUCKET_NAME = "storyteller-agent-store"
+GCS_MEDIA_BUCKET_NAME = "storyteller-public-media"
+GCS_AGENT_BUCKET_NAME = "storyteller-public-agents"
 
-#AI MODEL CONFIG
+#DEFAULT AI MODEL CONFIG
 DEFAULT_TEXT_MODEL_CONFIG_NAME = "google-text-basic"
 DEFAULT_IMAGE_MODEL_CONFIG_NAME = "google-image-basic"
 DEFAULT_SPEECH_MODEL_CONFIG_NAME = "google-speech-basic"
 
 #Document Defaults
-DEFAULT_FORMAT_NAME = ""
-STORY_SUBDOCUMENT_KEY = "dote_story"
+DEFAULT_FORMAT_NAME = "demo"
+STORY_SUBDOCUMENT_KEY = "story_content"
 
 logger = logging.getLogger(__name__)  
 logger.setLevel(logging.INFO)
