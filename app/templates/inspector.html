@@ -536,13 +536,21 @@
         function removeGeneratingAnimation(tableRow) {
             if (tableRow.classList.contains('flash-generating-animation')) {
                 tableRow.classList.remove('flash-generating-animation');
-                tableRow.cells[3].firstChild.disabled = false;
-                tableRow.cells[4].firstChild.disabled = false;
-                tableRow.cells[5].firstChild.disabled = false;
+                if (tableRow.cells && tableRow.cells.length > 5) { //check for enough cells
+                    if (tableRow.cells[3] && tableRow.cells[3].firstChild) { // Check if cell and firstChild exist
+                        tableRow.cells[3].firstChild.disabled = false; 
+                    }
+                    if (tableRow.cells[4] && tableRow.cells[4].firstChild) { 
+                        tableRow.cells[4].firstChild.disabled = false;
+                    }
+                    if (tableRow.cells[5] && tableRow.cells[5].firstChild) {
+                        tableRow.cells[5].firstChild.disabled = false;
+                    }
+                }
             }
-
         }
-
+  
+  
         function addGeneratingAnimationToNode(nodeId) {
            const node = cy.getElementById(nodeId);
            if (node) {
@@ -564,12 +572,21 @@
         function addGeneratingAnimation(tableRow) {
             if (!tableRow.classList.contains('flash-generating-animation')) {
                 tableRow.classList.add('flash-generating-animation');
-                tableRow.cells[3].firstChild.disabled = true;
-                tableRow.cells[4].firstChild.disabled = true;
-                tableRow.cells[5].firstChild.disabled = true;
+                if (tableRow.cells && tableRow.cells.length > 5) { // Check for enough cells
+                    if (tableRow.cells[3] && tableRow.cells[3].firstChild) {
+                        tableRow.cells[3].firstChild.disabled = true;
+                    }
+                    if (tableRow.cells[4] && tableRow.cells[4].firstChild) {
+                        tableRow.cells[4].firstChild.disabled = true;
+                    }
+                    if (tableRow.cells[5] && tableRow.cells[5].firstChild) {
+                        tableRow.cells[5].firstChild.disabled = true;
+                    }
+                }
             }
-
         }
+
+
    
         // Function to append content to an existing row in the Story Table
         function appendStoryTableData(contentId, contentData) {

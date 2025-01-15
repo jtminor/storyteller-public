@@ -13,7 +13,7 @@ from app import create_app
 
 # Define a test document ID
 TEST_DOC_ID = secrets.token_urlsafe(16)
-TEST_FORMAT_NAME = "test.0.0.3"
+TEST_FORMAT_NAME = "test"
 
 
 

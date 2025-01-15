@@ -1,4 +1,4 @@
-# Storyteller (Public Demo Version)
+# Storyteller (Public Version)
 
 ## What is the Storyteller Platform? 
 The Storyteller Platform is a new kind of CMS which we call a "generative streaming CMS". A traditional CMS is a database specialized to store and retreive content, usually html documents or other media. In a traditional CMS, content only exists if a user enters it. If content is requested and doesn't exist, an error or blank document is returned to the user. 
@@ -362,14 +362,14 @@ When a user uploads media or a transformer creates media the following process o
 In addition to the usual logging and http response codes, where appropriate, the system also publishes errors as Content Events. These Error events often contain more details about the failure. Clients should listen for errors in the Content Stream and deal with them (ie. present them to the user, retry, etc) in addition to standard http response errors.
 
 ## Epigraph
-> The storyteller makes no choice
-> Soon you will not hear his voice
-> His job is to shed light
-> And not to master
->
-> Since the end is never told
-> We pay the teller off in gold
-> In hopes he will come back
-> But he cannot be bought or sold
->
-> Robert Hunter - Terrapin Station
+> The storyteller makes no choice<br>
+> Soon you will not hear his voice<br>
+> His job is to shed light<br>
+> And not to master<br>
+><br>
+> Since the end is never told<br>
+> We pay the teller off in gold<br>
+> In hopes he will come back<br>
+> But he cannot be bought or sold<br>
+><br>
+> Robert Hunter - Terrapin Station<br>
