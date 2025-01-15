@@ -22,24 +22,14 @@ You can use the /{doc_id}/inspect endpoint to view the Format and Story for a do
 ### Inspector intros/howto (create, index, generate, update, status)
 
 ## The REST API
-- **POST /{doc_id}/generatecontent**: Generate content items. Creates new values for the requested items, even if there are existing values.
-- **GET /{doc_id}/getcontent**: Retrieve existing content items if they have already been generated or stored by the user. 
-- **POST /{doc_id}/updatecontent**: Update content items.
-- **GET /{doc_id}/indexcontent** : Retrieve an index of the content the document can generate and store.
-- **GET /{doc_id}/streamcontent**: Returns a stream of content events.
 
-Note: This is a simplified summary. Refer to the `apitestclient.html` documentation for detailed information on request parameters, response formats, and error handling. 
-
-
-### Testing the API Using the apitestclient.html Test Client
-Naviate to http://127.0.0.1:5000/static/apitest.client (or equivalent IP and port for your local environment). 
+### The API Test Client
+Naviate to http://127.0.0.1:5000/static/apitestclient.html (or equivalent IP and port for your local environment). 
 
 This page includes full API documentation and a simple UI to test each API endpoint and view the response.
 
-
 ### Checking Status Using the / "Home" Route
-The / ("home") route of the API returns a string verifying the platform is live. This can be used to determine if the platform is reachable and running when debugging.
-
+The / ("home") route of the API returns a version string, verifying the platform is live and reporting the active production build.
 
 ## API Usage Examples
 1. **Start listening to a stream:**
@@ -245,8 +235,9 @@ Here's a meta example of the Format JSON schema:
             "DATA": "default content",
             "TYPE": "<media type:txt,img,video,audio,set,loc>",
             "STATE": "<generation state:needed,active,done,locked>",
-            "PROMPTS": ["a prompt string with a §content.id§ replacement variable"],
-            "MEMORIES": ["a memory string>"]
+            "SYSTEM": "optional system prompt",
+            "PROMPTS": ["a prompt string with a §content.id§ replacement variables"],
+            "MEMORIES": ["a memory string"]
         }
     }
 }
