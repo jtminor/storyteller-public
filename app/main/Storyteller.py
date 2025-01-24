@@ -267,11 +267,8 @@ class Storyteller:
 				elif agent.type == "audio": model_config_name = DEFAULT_SPEECH_MODEL_CONFIG_NAME
 				else: model_config_name = DEFAULT_TEXT_MODEL_CONFIG_NAME
 
-
-
 			model_config = ModelConfig(model_config_name)
 			if agent.system: model_config.system += agent.system
-
 
 			# 9. Set the agent State to generating and Publish the change, don't store this change as this state should always complete in a single call or revert to the existing value if it can't be resolved to an invalid or done state in time
 			agent.state = "generating"
@@ -279,13 +276,11 @@ class Storyteller:
 
 			# 10. Special video handling (for now) or create a ModelInterface and use it to generate a response for other media
 			if agent.type == "video":
-				return self._generate_video_content(content_id)
-
-			generator_model = ModelInterface(model_config)
-
-
+				content_response = self._generate_video_content(content_id)
+			else:
+				generator_model = ModelInterface(model_config)		
+				content_response = generator_model.generate(full_text_prompt, agent.type)
 			
-			content_response = generator_model.generate(full_text_prompt, agent.type)
 			if content_response:
 				self.story.update_content(content_id, content_response)
 				logger.info(f"New value stored for {content_id}: {content_response}")
@@ -632,13 +627,6 @@ class Storyteller:
 			logger.error(f"No useable content found for {content_id}")
 			self.publisher.push_content(Content(content_id, "Failed to generate video.", "error"))
 			return False
-		if content_id == "dote.video":
-			logger.warning("_generate_video_content: creating special dote video.")
-			tmp_video_url = VideoComposer.create_dote_video(content_list)
-		elif content_id == "beacon":
-			logger.warning("_generate_video_content: creating special beacon video.")
-
-			tmp_video_url = VideoComposer.create_beacon_video(content_list)
 		else:
 			logger.warning("_generate_video_content: creating regular video.")
 			tmp_video_url = VideoComposer.create_video(content_list)
@@ -654,11 +642,7 @@ class Storyteller:
 				logger.warning("Failed to upload video to Google Cloud Storage.")
 				return False
 			else:
-				# Update the story content and publish the result
-				self.story.update_content(content_id, gcs_video_url)
-				logger.info(f"New video URL stored for {content_id}: {gcs_video_url}")
-				self.publisher.push_content(Content(content_id, gcs_video_url, "video"))
-				return True
+				return gcs_video_url
 		else:
 			logger.error(f"Failed to generate video for {content_id}")
 			self.publisher.push_content(Content(content_id, "Failed to generate video.", "error"))
