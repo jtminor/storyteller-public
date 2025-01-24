@@ -643,9 +643,7 @@
         }
         
        function formatDocument(docId) {
-
-           const formatName = document.getElementById('formatInput').value;
-           const formatMessage = document.getElementById('formatMessage'); // Get the message element
+            const formatName = document.getElementById('formatSelect').value; // Get selected value
        
            fetch(`/${docId}/formatcontent`, {
                method: 'POST',
@@ -851,9 +849,14 @@
     </div>
 
     <div class="panel" id="formatnewdoc"  {% if sorted_agents %}style="display: none;"{% endif %}>
-        <h2>Format New Document</h2>
-        <label for="formatInput">Format Name:</label><br>
-        <input type="text" id="formatInput" value="test.0.0.2"><br>
+        <h2>Format Document</h2>
+        <label for="formatSelect">Format:</label><br>
+        <select id="formatSelect">
+            <option value="demo">demo</option>
+            {% for format in formats %}
+                <option value="{{ format }}">{{ format }}</option>
+            {% endfor %}
+        </select><br> 
         <button onclick="formatDocument('{{ story_id }}')">Load Format</button>
         <p id="formatMessage"></p>  
     </div>

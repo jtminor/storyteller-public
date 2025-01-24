@@ -43,7 +43,7 @@ DEFAULT_IMAGE_MODEL_CONFIG_NAME = "google-image-basic"
 DEFAULT_SPEECH_MODEL_CONFIG_NAME = "google-speech-basic"
 
 #Document Defaults
-DEFAULT_FORMAT_NAME = "demo"
+DEFAULT_FORMAT_NAME = ""
 STORY_SUBDOCUMENT_KEY = "story_content"
 
 logger = logging.getLogger(__name__)  

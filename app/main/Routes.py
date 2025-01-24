@@ -2,6 +2,7 @@ from flask import request, stream_with_context, abort, jsonify, render_template,
 
 import logging
 import time
+import os
 
 from app.main.Storyteller import Storyteller, Content, Publisher, Agent, AgentStore
 
@@ -501,10 +502,16 @@ def inspect_document(doc_id):
 		else:
 			agent_state_map[content_key] = format_map[content_key]['initial_state']
 
+	# Get formats from static/formats
+	formats_dir = os.path.join(current_app.static_folder, 'formats')
+	formats = [f[:-5] for f in os.listdir(formats_dir) if os.path.isfile(os.path.join(formats_dir, f)) and f.endswith('.json')]
+
+
 	return render_template('inspector.html', 
 						story_id=storyteller.story_id,
 						sorted_agents=sorted_agents,
 						format_map=format_map,
+						formats = formats,
 						agent_state_map=agent_state_map,
 						graph_dependents_map=storyteller.format.dependents_map, 
 						graph_depends_on_map=storyteller.format.depends_on_map,
