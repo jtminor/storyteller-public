@@ -2,14 +2,6 @@
   "DISPLAY_NAME": "Simple Demo Format",
   "DESC": "A document template for demonstrating the basic capabilities of the Storyteller platform.",
   "AGENTS": {
-    "demo.contents" : {
-      "DESC": "All demonstration content.",
-      "DATA": "",
-      "TYPE": "set",
-      "STATE": "done",
-      "PROMPTS": ["§demo.color§","§demo.swatch§","§demo.voice§","§demo.video§"],
-      "MEMORIES": []
-    },
     "demo.color": {
       "DESC": "A color.",
       "DATA": "",

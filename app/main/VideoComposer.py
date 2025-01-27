@@ -57,6 +57,11 @@ class VideoComposer:
 	
 	def create_video(content_list):
 		"""Creates a video from a list of content items."""
+
+		if len(content_list) == 0: 
+			logger.error("No content found for video.")
+			return None
+
 		audio_list = []
 		images_list = []
 		text_list = []
@@ -72,6 +77,11 @@ class VideoComposer:
 				text_list.append(content_item.data)
 			elif content_item.type == "audio":
 				audio_list.append(content_item.data)
+		
+		if len(images_list) == 0: 
+			logger.error("No images found for video.")
+			return None
+
 
 		audio_clips = []
 		for audio_url in audio_list:
@@ -103,8 +113,8 @@ class VideoComposer:
 			video_length = final_audio.duration
 
 		# Create the slideshow
-		clips = []
-		slide_duration = video_length / (len(images_list) ) if video_length else 1
+		clips = [] 
+		slide_duration = video_length / (len(images_list) )
 
 		for frame_url in images_list:
 			if frame_url == '': continue

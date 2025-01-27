@@ -608,11 +608,10 @@ class Storyteller:
 			video_agent.store()
 		
 		#build this list of video content objects from the video agent's data
-
 		video_content_ids = [content_id.strip() for content_id in video_agent.data.split(",")]
 
 		self._validate_content(video_content_ids)
-		logger.info(f"Video content being gathered from content ids:"+str(video_content_ids))
+		logger.info(f"Video content being valided for content ids:"+str(video_content_ids))
 
 		for content_item in video_agent.prompts:
 			content_item = content_item.replace("§", "")
@@ -625,10 +624,10 @@ class Storyteller:
 			content_list.append(content_object)
 		if len(content_list) == 0:
 			logger.error(f"No useable content found for {content_id}")
-			self.publisher.push_content(Content(content_id, "Failed to generate video.", "error"))
+			self.publisher.push_content(Content(content_id, "No content found to gemerate video.", "error"))
 			return False
 		else:
-			logger.warning("_generate_video_content: creating regular video.")
+			logger.info("Compositing video from input content.")
 			tmp_video_url = VideoComposer.create_video(content_list)
 
 		if tmp_video_url:
