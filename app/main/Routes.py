@@ -55,7 +55,7 @@ def test_api(doc_id):
 	Returns:
 		str: The retrieved content data after the update, confirming API functionality.
 	"""
-	TEST_FORMAT_NAME = "test"
+	TEST_FORMAT_NAME = "test.0.0.2"
 	try:
 		logger.info(f"GET request received for test with document id {doc_id} ")
 		if not doc_id:  # Example: Check if doc_id is not empty

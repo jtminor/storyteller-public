@@ -1,12 +1,11 @@
 # Storyteller (Public Version)
 
 ## What is the Storyteller Platform? 
-The Storyteller Platform is a new kind of CMS which we call an Agentic Streaming Content Manamement System". 
+The Storyteller Platform is a new kind of CMS which we call a "generative streaming CMS". A traditional CMS is a database specialized to store and retreive content, usually html documents or other media. In a traditional CMS, content only exists if a user enters it. If content is requested and doesn't exist, an error or blank document is returned to the user. 
 
+The "generative" part of the generative streaming CMS changes that expectation, generating some minimally viable content for any valid content requests. This is made possible by the use of a semantic graph which defines the relationships between the content items and the context to generate the content whenever needed. In this system, the more content the user provides the better the other conetnt will become (a "content network effect"), but some content will always be avaliable even if the user hasn't input a single thing.
 
- generating some minimally viable content for any valid content requests. This is made possible by the use of a semantic graph which defines the relationships between the content items and the context to generate the content whenever needed. In this system, the more content the user provides the better the other conetnt will become (a "content network effect")
-
-The "streaming" part reflects the different way content is delivered in the system. Rather than provide a synchronous complete document response when content is generated, the platform publishes sub-document level content, and pushes those content items to the client as Server Sent Events. These events include semantic content identifiers which identiy the pieces place in the content graph, allowing the system to continously deliver content as is generated or modified.
+The "streaming" part reflects the different way content is delivered in the system. Rather than provide a synchronous complete document response when content is generated, the platform publishes sub-document level content, and pushes those content items to the client as Server Sent Events. These events include semantic content identifiers which identiy the pieces place in the content graph, allowing the system to continously deliver content in chunks via an asynchronous stream and the client to place those chunks based on their identity.
 
 ## Quick Demo
 
