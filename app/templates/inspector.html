@@ -245,7 +245,7 @@
                     <option value="generating">Generating</option>
                     <option value="locked">Locked</option>
                 `;
-                stateSelect.onchange = () => setContentState('{{ story_id }}', contentId);
+                stateSelect.onchange = () => setContentState('{{ story_id }}', contentId, stateSelect.value);
                 stateSelectCell.appendChild(stateSelect);
             
                 fetchAndSetContentState('{{ story_id }}', contentId);
@@ -360,9 +360,7 @@
         });
         }
 
-        function setContentState(docId, contentId) {
-            const stateSelect = document.getElementById(`contentState-${contentId}`);
-            const newState = stateSelect.value;
+        function setContentState(docId, contentId, newState) {
 
             fetch(`/${docId}/setcontentstate`, {
                 method: 'POST',
@@ -399,6 +397,7 @@
                 }, 500); // Adjust delay (in milliseconds) as needed 
             });
         }
+
 
         function updateNodeColor(contentId, state) {
             const color = getStateColor(state);
@@ -456,7 +455,7 @@
                     <option value="locked">Locked</option>
                 `;
                 stateSelect.value = newState; // Set initial state
-                stateSelect.onchange = () => setContentState('{{ story_id }}', contentId);
+                stateSelect.onchange = () => setContentState('{{ story_id }}', contentId, stateSelect.value);
                 stateSelectCell.appendChild(stateSelect);
               
                 // Add Actions cell
@@ -623,7 +622,6 @@
 
             const errorCell = row.insertCell();
             errorCell.textContent = `Error: ${errorMessage}`;
-            errorCell.colSpan = 5; // Span across remaining columns
             row.classList.add('flash-error-animation');
 
             // Remove the animation class after a delay
@@ -739,6 +737,7 @@
                  });
             });
 
+
             // Add edges to elements array
             for (const source in dependentsMap) {
                 dependentsMap[source].forEach(target => {
@@ -784,18 +783,118 @@
                         }
                     }
                 ],
+                ready: function(){
+                    applyLayout('grid'); 
 
-            });
-            
-            applyLayout('grid'); 
-            const layoutSelect = document.getElementById('layoutSelect');
-            layoutSelect.addEventListener('change', function() {
-                const selectedLayout = this.value;
-                applyLayout(selectedLayout);
-            });
-  
+                     // Event listener for layout changes
+                     const layoutSelect = document.getElementById('layoutSelect');
+                    layoutSelect.addEventListener('change', function() {
+                        const selectedLayout = this.value;
+                        applyLayout(selectedLayout);
+                     });
+                    
+            }
+        });
         }
         
+        function addContextMenu() {
+            if (cy) { 
+                cy.nodes().forEach(function(node){
+                    node.on('cxttap', function(event) { // Use 'cxttap' for right-click
+                        event.preventDefault(); // Prevent default right-click behavior
+
+                        const contentId = node.id(); // Get the content ID from the node
+
+                        // Create context menu dynamically
+                        const contextMenu = document.createElement('div');
+                        contextMenu.style.position = 'absolute';
+                        contextMenu.style.left = event.originalEvent.clientX + 'px'; //Menu position
+                        contextMenu.style.top = event.originalEvent.clientY + 'px';
+                        contextMenu.style.background = 'white';
+                        contextMenu.style.border = '1px solid black';
+                        contextMenu.style.padding = '5px';
+                        contextMenu.style.zIndex = '1000'; // Ensure it's on top
+                        contextMenu.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.2)';
+                        contextMenu.id = 'context-menu';
+
+                            
+                        function createMenuItem(text, onClick) {
+                            const menuItem = document.createElement('div');
+                            menuItem.textContent = text;
+                            menuItem.style.padding = '3px';
+                            menuItem.style.cursor = 'pointer'; // Add hover effect
+                            menuItem.addEventListener('click', onClick);
+                            return menuItem;
+                            }
+
+                        contextMenu.appendChild(createMenuItem('Generate', function() {
+                            generateContent('{{ story_id }}', contentId); 
+                            contextMenu.remove();
+                        }));
+
+                        contextMenu.appendChild(createMenuItem('Inspect', function() {
+                            const contentId = node.id();
+                            let row = document.getElementById(`storyRow-${contentId}`);
+                            if (!row) {
+                                row = document.getElementById(`formatRow-${contentId}`);
+                            }
+                        
+                            if (row) {
+                                row.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Smooth scrolling
+                        
+                                // Add a temporary class for the pulse animation
+                                row.classList.add('flash-update-animation');
+                        
+                                // Remove the class after the animation duration (adjust as needed)
+                                setTimeout(() => {
+                                    row.classList.remove('flash-update-animation');
+                                }, 500);
+                            }
+                            contextMenu.remove();
+                        }));
+                        
+
+                        contextMenu.appendChild(createMenuItem('Invalidate', function() {
+                            setContentState('{{ story_id }}', contentId, 'invalid');
+                            contextMenu.remove();
+
+                        }));
+
+                        contextMenu.appendChild(createMenuItem('Propogate', function() {
+                            generateContent('{{ story_id }}', `${contentId}*`);
+                            contextMenu.remove();
+
+                        }));
+                        contextMenu.appendChild(createMenuItem('Rebuild', function() {
+                            generateContent('{{ story_id }}', `${contentId}^`);
+                            contextMenu.remove();
+
+                        }));
+
+
+                        document.body.appendChild(contextMenu);
+
+                    });
+                });
+            }
+        }
+        
+
+        // Remove context menu on any click outside the menu:
+        document.addEventListener('click', function(event) {
+            contextMenu = document.getElementById('context-menu');
+            if (!contextMenu) {
+                document.removeEventListener('click', arguments.callee);
+                return;
+            }
+            if (!contextMenu.contains(event.target)) { // Check if click is outside
+                contextMenu.remove(); // Remove ONLY ONCE
+                document.removeEventListener('click', arguments.callee); // Remove the listener itself to prevent multiple removals
+            }
+        });
+
+
+
         function previewContent(docId, contentId) {
             const contentDataInput = document.getElementById(`contentData-${contentId}`);
             const contentUrl = contentDataInput.value;
@@ -935,7 +1034,7 @@
                         <textarea id="contentData-{{ key }}">{{ story_map[key] }}</textarea> 
                     </td>
                     <td>
-                        <select id="contentState-{{ key }}" onchange="setContentState('{{ story_id }}', '{{ key }}')">
+                        <select id="contentState-{{ key }}" onchange="setContentState('{{ story_id }}', '{{ key }}', this.value)">
                             <option value="none" {% if agent_state_map[key] == "none" %}selected{% endif %}>None</option>
                             <option value="done" {% if agent_state_map[key] == "done" %}selected{% endif %}>Done</option>
                             <option value="invalid" {% if agent_state_map[key] == "invalid" %}selected{% endif %}>Invalid</option>
@@ -971,6 +1070,7 @@
         {% if sorted_agents %}
             startStreamingContent('{{ story_id }}'); 
             buildCytoscapeVisualization();
+            addContextMenu();
         {% endif %}
      };
     </script>
