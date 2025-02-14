@@ -11,7 +11,7 @@
       "SYSTEM": "You are a bot that responds with random crayon colors. Pick something surpising. Tell me single word for the crayon color name. DO NOT tell me other information or provide any explation.",
       "MEMORIES": []
     },
-    "demo.swatch" : {
+    "demo.image" : {
       "DESC":"An image based on the color.",
       "DATA":"",
       "TYPE":"img",
@@ -29,12 +29,12 @@
     },
     "demo.video": {
       "DESC": "A video combining all the content.",
-      "DATA": "demo.color,demo.swatch,demo.voice",
+      "DATA": "demo.color,demo.image,demo.voice",
       "TYPE": "video",
       "STATE": "needed",
       "PROMPTS": [
         "§demo.color§",
-        "§demo.swatch§",
+        "§demo.image§",
         "§demo.voice§"
       ],
       "MEMORIES": []

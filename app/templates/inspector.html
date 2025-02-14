@@ -13,6 +13,7 @@
             margin: 5%;
             background:lightgrey;
         }
+
         th,td {
             padding:5px;
             text-align: left;
@@ -29,7 +30,18 @@
             background-color:white;
         }
 
-        
+        button {
+            margin: 2px 2px;
+            font-family: monospace;
+        }
+
+        select {
+            padding: 2px;
+            border: 1px solid darkgrey;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
 
         #formatTable th:nth-child(1) { width: 15%; } /* Content ID */
         #formatTable th:nth-child(2) { width: 20%; } /* Description */
@@ -40,9 +52,9 @@
         #formatTable th:nth-child(7) { width: 7%; } /* Actions */
 
         #storyTable th:nth-child(1) { width: 15%; } /* Content ID */
-        #storyTable th:nth-child(2) { width: 50%; } /* Data */
+        #storyTable th:nth-child(2) { width: 40%; } /* Data */
         #storyTable th:nth-child(3) { width: 10%; } /* State */
-        #storyTable tr:nth-child(4) { width: 30%; } /* Actions */
+        #storyTable tr:nth-child(4) { width: 40%; } /* Actions */
  
         #storyTable input[type="text"] {
             width: 100%;
@@ -56,10 +68,6 @@
             box-sizing: border-box;
         }
 
-        #storyTable select {
-            padding: 5px;
-            border: 1px solid darkgrey;
-        }
         .panel {
             background-color: white;
             border: 3px solid black;
@@ -85,8 +93,25 @@
 
         #format-graph {
             width: 100%;
-            height: 600px;
+            height: 500px;
         }
+        #context-menu {
+            background: white;
+            border: 1px solid black;
+            padding: 5px;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+        }
+
+        .context-menu-item {
+            padding: 5px;
+            cursor: pointer;
+        }
+        .context-menu-item:hover {
+            background-color: #f0f0f0ce;
+        }
+
 
        .flash-generating-animation { /* Style the entire row */
              animation: pulse 1s infinite ease-in-out; 
@@ -196,7 +221,7 @@
                     break;
                 case 'RESTATE':
                     updateStoryTableRowState(contentId, contentData);
-                    updateNodeColor(contentId, contentData);
+                    updateNodeState(contentId, contentData);
                     break;
                 default:
                     console.log('Unhandled event type:', event.type);
@@ -328,9 +353,9 @@
             switch (state) {
                 case 'done': return 'lightgreen';
                 case 'invalid': return 'lightcoral';
-                case 'generating': return 'lightgray'; //Will puslse
+                case 'generating': return 'lightblue'; //Will puslse
                 case 'locked': return 'lightyellow';
-                case 'needed': return 'lightblue';
+                case 'needed': return 'lightgrey';
                 case 'none': return 'white'; // Default color
                 default: return 'white'; // Default color
             }
@@ -339,9 +364,9 @@
 
 
         function fetchAndSetContentState(docId, contentId) {
-             fetch(`/${docId}/getcontentstate?content_id=${contentId}`)
-        .then(response => response.text())
-        .then(data => {
+            fetch(`/${docId}/getcontentstate?content_id=${contentId}`)
+            .then(response => response.text())
+            .then(data => {
             const stateSelect = document.getElementById(`contentState-${contentId}`);
             if (stateSelect) {
                 console.log('Fetched content state:', data);
@@ -352,7 +377,7 @@
                 } else {
                     removeGeneratingAnimation(row);
                 }
-                updateNodeColor(contentId, data);
+                updateNodeState(contentId, data);
             }
         })
         .catch(error => {
@@ -361,7 +386,6 @@
         }
 
         function setContentState(docId, contentId, newState) {
-
             fetch(`/${docId}/setcontentstate`, {
                 method: 'POST',
                 headers: {
@@ -398,15 +422,14 @@
             });
         }
 
-
-        function updateNodeColor(contentId, state) {
+        function updateNodeState(contentId, state) {
             const color = getStateColor(state);
-
+            cy.getElementById(contentId).data('state', state);
             cy.getElementById(contentId).style({
                 'background-color': color
             });
 
-         // Apply pulse animation if in 'generating' state
+            // Apply pulse animation if in 'generating' state
             if (state === 'generating') {
                 addGeneratingAnimationToNode(contentId);
             } else {
@@ -414,13 +437,8 @@
             }
         }
 
-        
-
         function updateStoryTableRowState(contentId, newState) {
-            
             let row = document.getElementById(`storyRow-${contentId}`);
-            
-
             if (!row) {
                 let row_type = getMediaTypeForContentId(contentId);
                 console.log('Adding new content row:', contentId);
@@ -550,7 +568,6 @@
             }
         }
   
-  
         function addGeneratingAnimationToNode(nodeId) {
            const node = cy.getElementById(nodeId);
            if (node) {
@@ -599,8 +616,6 @@
 
         function getMediaTypeForContentId(contentId) {
             const formatRow = document.getElementById(`formatRow-${contentId}`);
-
-        // Now you can access cells of the format row
             if (formatRow) {
                 const contentType = formatRow.cells[5].textContent; // Get type (6th cell)
                 if (contentType) {
@@ -769,8 +784,9 @@
                             'border-width': 2,
                             'border-color': 'black',
                             'color': 'black',
-                            'font-size': 24,
-                            'padding': '10px'
+                            'font-size': 18,
+                            'padding': '10px',
+                            'font-family': 'monospace'
                         }
                     },
                     {
@@ -784,17 +800,14 @@
                     }
                 ],
                 ready: function(){
-                    applyLayout('grid'); 
-
                      // Event listener for layout changes
                      const layoutSelect = document.getElementById('layoutSelect');
                     layoutSelect.addEventListener('change', function() {
                         const selectedLayout = this.value;
                         applyLayout(selectedLayout);
-                     });
-                    
-            }
-        });
+                     });    
+                }
+            });
         }
         
         function addContextMenu() {
@@ -804,28 +817,22 @@
                         event.preventDefault(); // Prevent default right-click behavior
 
                         const contentId = node.id(); // Get the content ID from the node
+                        const contentState = node.data('state');
 
                         // Create context menu dynamically
                         const contextMenu = document.createElement('div');
                         contextMenu.style.position = 'absolute';
                         contextMenu.style.left = event.originalEvent.clientX + 'px'; //Menu position
                         contextMenu.style.top = event.originalEvent.clientY + 'px';
-                        contextMenu.style.background = 'white';
-                        contextMenu.style.border = '1px solid black';
-                        contextMenu.style.padding = '5px';
-                        contextMenu.style.zIndex = '1000'; // Ensure it's on top
-                        contextMenu.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.2)';
                         contextMenu.id = 'context-menu';
 
-                            
                         function createMenuItem(text, onClick) {
                             const menuItem = document.createElement('div');
                             menuItem.textContent = text;
-                            menuItem.style.padding = '3px';
-                            menuItem.style.cursor = 'pointer'; // Add hover effect
                             menuItem.addEventListener('click', onClick);
+                            menuItem.classList.add('context-menu-item');
                             return menuItem;
-                            }
+                        }
 
                         contextMenu.appendChild(createMenuItem('Generate', function() {
                             generateContent('{{ story_id }}', contentId); 
@@ -848,51 +855,53 @@
                                 // Remove the class after the animation duration (adjust as needed)
                                 setTimeout(() => {
                                     row.classList.remove('flash-update-animation');
-                                }, 500);
+                                }, 1000);
                             }
                             contextMenu.remove();
                         }));
                         
+                        if (contentState === 'locked') {
+                            contextMenu.appendChild(createMenuItem('Unlock', function() {
+                                setContentState('{{ story_id }}', contentId, 'needed');
+                                contextMenu.remove();
+                             }));
+                        } else {
+                            contextMenu.appendChild(createMenuItem('Lock', function() {
+                                setContentState('{{ story_id }}', contentId, 'locked');
+                                contextMenu.remove();
+                            }));
+                        }
 
-                        contextMenu.appendChild(createMenuItem('Invalidate', function() {
-                            setContentState('{{ story_id }}', contentId, 'invalid');
-                            contextMenu.remove();
+                        if (contentState !== 'invalid') {
+                            contextMenu.appendChild(createMenuItem('Invalidate', function() {
+                                setContentState('{{ story_id }}', contentId, 'invalid');
+                                contextMenu.remove();
 
-                        }));
+                            }));
+                        }
 
-                        contextMenu.appendChild(createMenuItem('Propogate', function() {
-                            generateContent('{{ story_id }}', `${contentId}*`);
-                            contextMenu.remove();
 
-                        }));
-                        contextMenu.appendChild(createMenuItem('Rebuild', function() {
-                            generateContent('{{ story_id }}', `${contentId}^`);
-                            contextMenu.remove();
-
-                        }));
 
 
                         document.body.appendChild(contextMenu);
 
                     });
                 });
+
+                // Remove context menu on any click outside the menu:
+                document.addEventListener('click', function(event) {
+                    contextMenu = document.getElementById('context-menu');
+                    if (!contextMenu) {
+                        document.removeEventListener('click', arguments.callee);
+                        return;
+                    }
+                    if (!contextMenu.contains(event.target)) { // Check if click is outside
+                        contextMenu.remove(); // Remove ONLY ONCE
+                        document.removeEventListener('click', arguments.callee); // Remove the listener itself to prevent multiple removals
+                    }
+                });
             }
         }
-        
-
-        // Remove context menu on any click outside the menu:
-        document.addEventListener('click', function(event) {
-            contextMenu = document.getElementById('context-menu');
-            if (!contextMenu) {
-                document.removeEventListener('click', arguments.callee);
-                return;
-            }
-            if (!contextMenu.contains(event.target)) { // Check if click is outside
-                contextMenu.remove(); // Remove ONLY ONCE
-                document.removeEventListener('click', arguments.callee); // Remove the listener itself to prevent multiple removals
-            }
-        });
-
 
 
         function previewContent(docId, contentId) {
@@ -906,12 +915,20 @@
 
         function applyLayout(layoutName) {
             if (cy) { // Check if cy is initialized
+                cy.center();
                 const layout = cy.layout({
-                    name: layoutName
+                    name: layoutName,
+                    animate: true,
+                    nodeDimensionsIncludeLabels: true,
+                    klay: {
+                        spacing: 40,
+                        edgeSpacingFactor: 1.5,
+                        thoroughness: 10
+                    }
                 });
                 layout.run();
                 cy.center();
-                cy.fit();
+    
             }
         }
         
@@ -966,14 +983,14 @@
         <h2>Visualizer</h2>
         <label for="layoutSelect">Choose a layout:</label>
         <select id="layoutSelect">
+            <option value="klay" selected>Klay</option>
             <option value="breadthfirst">Breadthfirst</option>
             <option value="circle">Circle</option>
             <option value="concentric">Concentric</option>
             <option value="cose">Cose</option>
             <option value="grid">Grid</option>
-            <option value="klay">Klay</option>
             <option value="random">Random</option>
-            </select>
+        </select>
         <div id="format-graph"></div>
         
     </div>
@@ -1070,6 +1087,7 @@
         {% if sorted_agents %}
             startStreamingContent('{{ story_id }}'); 
             buildCytoscapeVisualization();
+            applyLayout('klay');
             addContextMenu();
         {% endif %}
      };
