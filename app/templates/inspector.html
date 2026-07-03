@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: monospace;
-            margin: 5%;
+            margin: 3%;
             background:lightgrey;
         }
 
@@ -33,47 +33,57 @@
         button {
             margin: 2px 2px;
             font-family: monospace;
+            border: 2px solid darkgrey;
+            border-radius: 5px;
+            padding: 5px;
         }
 
         select {
             padding: 2px;
-            border: 1px solid darkgrey;
-            border-radius: 3px;
+            border: 2px solid darkgrey;
+            border-radius: 5px;
             font-family: monospace;
         }
 
-
-        #formatTable th:nth-child(1) { width: 15%; } /* Content ID */
+        th:first-of-type {
+            border-top-left-radius: 10px;
+        }
+        th:last-of-type {
+            border-top-right-radius: 10px;
+        }
+        tr:last-of-type td:first-of-type {
+            border-bottom-left-radius: 10px;
+        }
+        tr:last-of-type td:last-of-type {
+            border-bottom-right-radius: 10px;   
+        }
+        
+        #formatTable th:nth-child(1) { width: 12%; } /* Content ID */
         #formatTable th:nth-child(2) { width: 20%; } /* Description */
         #formatTable th:nth-child(3) { width: 15%; } /* Initial Value */
         #formatTable th:nth-child(4) { width: 5%; } /* Initial State */
         #formatTable th:nth-child(5) { width: 33%; } /* Prompts */
         #formatTable th:nth-child(6) { width: 5%; } /* Media Type */
-        #formatTable th:nth-child(7) { width: 7%; } /* Actions */
+        #formatTable th:nth-child(7) { width: 10%; } /* Actions */
 
         #storyTable th:nth-child(1) { width: 15%; } /* Content ID */
         #storyTable th:nth-child(2) { width: 40%; } /* Data */
         #storyTable th:nth-child(3) { width: 10%; } /* State */
         #storyTable tr:nth-child(4) { width: 40%; } /* Actions */
  
-        #storyTable input[type="text"] {
-            width: 100%;
-            resize: both;
-            box-sizing: border-box;
-        }
         #storyTable textarea {
             width: 100%;
-            height: 1.5em; 
+            height: 100%;
             resize: vertical;
             box-sizing: border-box;
         }
 
         .panel {
             background-color: white;
-            border: 3px solid black;
-            border-radius: 3px;
-            padding: 10px;
-            margin-bottom: 20px;
+            border: 4px solid black;
+            border-radius: 7px;
+            padding: 0px 20px 10px 20px;
+            margin-bottom: 10px;
         }
         .section {
             padding: 5px;
@@ -95,13 +105,14 @@
             width: 100%;
             height: 500px;
         }
+
         #context-menu {
             background: white;
-            border: 1px solid black;
+            border: 2px solid black;
             padding: 5px;
             z-index: 1000;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+            border-radius: 3px;
         }
 
         .context-menu-item {
@@ -109,16 +120,20 @@
             cursor: pointer;
         }
         .context-menu-item:hover {
-            background-color: #f0f0f0ce;
+            background-color: #f0f0f080;
         }
+
+        
+        
 
 
        .flash-generating-animation { /* Style the entire row */
              animation: pulse 1s infinite ease-in-out; 
         }
+
         @keyframes pulse {
             0% { background-color: inherit; } /* Start with the default background */
-             50% { background-color: darkgrey; } /* Flash color */
+             50% { background-color: lightblue; } /* Flash color */
              100% { background-color: inherit; } /* Back to default */
         }
         .flash-update-animation {
@@ -126,7 +141,7 @@
         }
         @keyframes flashRowSuccess {
              0% { background-color: inherit; } /* Start with the default background */
-             50% { background-color: lightblue; } /* Flash color */
+             50% { background-color: lightgreen; } /* Flash color */
              100% { background-color: inherit; } /* Back to default */
         }
         .flash-error-animation {
@@ -879,10 +894,15 @@
 
                             }));
                         }
+                        contextMenu.appendChild(createMenuItem('Build', function() {
+                            generateContent('{{ story_id }}', contentId + '^');
+                            contextMenu.remove();
+                        }));
 
-
-
-
+                        contextMenu.appendChild(createMenuItem('Propogate', function() {
+                            generateContent('{{ story_id }}', contentId + '*');
+                            contextMenu.remove();
+                        }));
                         document.body.appendChild(contextMenu);
 
                     });
@@ -915,19 +935,20 @@
 
         function applyLayout(layoutName) {
             if (cy) { // Check if cy is initialized
-                cy.center();
                 const layout = cy.layout({
                     name: layoutName,
                     animate: true,
                     nodeDimensionsIncludeLabels: true,
                     klay: {
-                        spacing: 40,
-                        edgeSpacingFactor: 1.5,
-                        thoroughness: 10
-                    }
+                        spacing: 30,
+                        edgeSpacingFactor: 2,
+                        thoroughness: 8
+                    },
+                    padding: 10
                 });
                 layout.run();
                 cy.center();
+                cy.zoom(0.5);
     
             }
         }
@@ -960,20 +981,20 @@
     <div class="panel" id="doc_info">
          <h2 id="story_id">Document ID: {{ story_id }}</h2>
          <h3 id="created_date">Created Date: {{ story_map["_touched"] }} </h3>
-        <button onclick="deleteDocument('{{ story_id }}')">Delete Document</button> <br>
+        <button onclick="deleteDocument('{{ story_id }}')">Delete Document</button>
         <p id="deleteResult"></p>
     </div>
 
     <div class="panel" id="formatnewdoc"  {% if sorted_agents %}style="display: none;"{% endif %}>
         <h2>Format Document</h2>
-        <label for="formatSelect">Format:</label><br>
+        <label for="formatSelect">Select format:</label>
         <select id="formatSelect">
             <option value="demo">demo</option>
             {% for format in formats %}
                 <option value="{{ format }}">{{ format }}</option>
             {% endfor %}
-        </select><br> 
-        <button onclick="formatDocument('{{ story_id }}')">Load Format</button>
+        </select>
+        <button onclick="formatDocument('{{ story_id }}')">Apply Format</button>
         <p id="formatMessage"></p>  
     </div>
 
@@ -983,9 +1004,9 @@
         <h2>Visualizer</h2>
         <label for="layoutSelect">Choose a layout:</label>
         <select id="layoutSelect">
-            <option value="klay" selected>Klay</option>
+            <option value="klay">Klay</option>
             <option value="breadthfirst">Breadthfirst</option>
-            <option value="circle">Circle</option>
+            <option value="circle" selected>Circle</option>
             <option value="concentric">Concentric</option>
             <option value="cose">Cose</option>
             <option value="grid">Grid</option>
@@ -1087,7 +1108,7 @@
         {% if sorted_agents %}
             startStreamingContent('{{ story_id }}'); 
             buildCytoscapeVisualization();
-            applyLayout('klay');
+            applyLayout('circle');
             addContextMenu();
         {% endif %}
      };
