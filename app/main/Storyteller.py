@@ -45,7 +45,6 @@ DEFAULT_SPEECH_MODEL_CONFIG_NAME = "google-speech-basic"
 OLLAMA_HOST = "Pictor.local"
 OLLAMA_PORT = "11434"
 
-
 #Document Defaults
 DEFAULT_FORMAT_NAME = ""
 STORY_SUBDOCUMENT_KEY = "story_content"
@@ -1617,7 +1616,7 @@ class ModelInterface:
 			config_lang = self.model_config.parameters.get("lang", "en")
 			config_guidance = self.model_config.parameters.get("guidance", "4")
 			config_safety = self.model_config.parameters.get("safety", "block_some")
-			config_person = self.model_config.parameters.get("person", "dont_allow")
+			config_person = self.model_config.parameters.get("person", "allow_all")
 
 			vertexai.init(project=gc_proj_name, location=gc_region)
 			generation_model = ImageGenerationModel.from_pretrained(self.model_config.model_name)
@@ -1630,6 +1629,7 @@ class ModelInterface:
 				guidance_scale=config_guidance,
 				safety_filter_level=config_safety,
 				person_generation=config_person
+				
 			)
 
 			logger.info(f"Image result type: {type(image)}, value: {image}")
@@ -1658,12 +1658,16 @@ class ModelInterface:
 				logger.error("Failed to extract an image from the response.")
 				return None
 
+			if not hasattr(generated_image, '_image_bytes'):
+				logger.error(f"Generated image object does not have '_image_bytes' attribute. Value: {generated_image}")
+				return None
+
 			try:
 				image_url = MediaStore.upload_base64_file(
 					base64.b64encode(generated_image._image_bytes).decode('utf-8'),
 					use_type="image/png"
 				)
-			except Exception as e:
+			except (AttributeError, TypeError, Exception) as e:
 				logger.error(f"Error while uploading the generated image to MediaStore: {e}")
 				return None
 
