@@ -30,12 +30,12 @@ import traceback
 from .LoggerManager import LoggerManager
 
 #Google Cloud Storage Info
-GC_PROJECT_ID = "storyteller3"
+GC_PROJECT_ID = "storyteller-demo"
 STORY_COLLECTION_NAME = "public_stories"
 QUEUE_COLLECTION_NAME = "public_queues"
 
-GCS_MEDIA_BUCKET_NAME = "storyteller-public-media"
-GCS_AGENT_BUCKET_NAME = "storyteller-public-agents"
+GCS_MEDIA_BUCKET_NAME = "storyteller-demo-media"
+GCS_AGENT_BUCKET_NAME = "storyteller-demo-agents"
 
 #DEFAULT AI MODEL CONFIG
 DEFAULT_TEXT_MODEL_CONFIG_NAME = "google-text-basic"
