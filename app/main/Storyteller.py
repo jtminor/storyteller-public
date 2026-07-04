@@ -21,7 +21,6 @@ from vertexai.preview.vision_models import ImageGenerationModel
 from vertexai.generative_models import GenerativeModel, SafetySetting
 from vertexai.preview.vision_models import ImageGenerationResponse
 
-
 from openai import OpenAI
 from openai import OpenAIError
 
@@ -42,6 +41,11 @@ DEFAULT_TEXT_MODEL_CONFIG_NAME = "google-text-basic"
 DEFAULT_IMAGE_MODEL_CONFIG_NAME = "google-image-basic"
 DEFAULT_SPEECH_MODEL_CONFIG_NAME = "google-speech-basic"
 
+#OLLAMA
+OLLAMA_HOST = "Pictor.local"
+OLLAMA_PORT = "11434"
+
+
 #Document Defaults
 DEFAULT_FORMAT_NAME = ""
 STORY_SUBDOCUMENT_KEY = "story_content"
@@ -49,7 +53,6 @@ STORY_SUBDOCUMENT_KEY = "story_content"
 logger = logging.getLogger(__name__)  
 logger.setLevel(logging.INFO)
 
-# Step 2: Configure loggers
 LoggerManager.setup_loggers()  # This applies your preferred log levels
 
 class StorageClient:
@@ -77,9 +80,9 @@ class FirestoreClient:
             # Connect to Firestore in production (or other environments)
             if cls._client is None:
                 if project:
-                    cls._client = firestore.Client(project=project)
+                    cls._client = firestore.Client(project=project, database=GC_PROJECT_ID)
                 else:
-                    cls._client = firestore.Client()  # Default client without specifying a project
+                    cls._client = firestore.Client(database=GC_PROJECT_ID)  # Default client without specifying a project
         return cls._client
 
 class Storyteller:
@@ -1363,8 +1366,6 @@ class ModelInterface:
 			if self.model_config.system:
 				prompt = f"{self.model_config.system}\n{prompt}"
 
-
-
 			# Prepare the request body
 			request_body = {
 				"model": model_name,
@@ -1373,8 +1374,9 @@ class ModelInterface:
 				"max_tokens": max_length
 			}
 
+			#
 			# Make the request to the Ollama server
-			ollama_url = "http://localhost:11434/api/generate"  # Ollama's default API endpoint
+			ollama_url = "http://" + OLLAMA_HOST + ":" + OLLAMA_PORT + "/api/generate"  # Ollama's default API endpoint
 			response = requests.post(ollama_url, json=request_body, stream=True) #stream=True handles long responses efficiently
 
 			response.raise_for_status()  # Raise an exception for HTTP errors (4xx or 5xx)
