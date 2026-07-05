@@ -613,7 +613,7 @@ class Storyteller:
 		video_content_ids = [content_id.strip() for content_id in video_agent.data.split(",")]
 
 		self._validate_content(video_content_ids)
-		logger.info(f"Video content being valided for content ids:"+str(video_content_ids))
+		logger.info(f"Video content being validated for content ids:"+str(video_content_ids))
 
 		for content_item in video_agent.prompts:
 			content_item = content_item.replace("§", "")

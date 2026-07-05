@@ -82,6 +82,9 @@ class VideoComposer:
 			logger.error("No images found for video.")
 			return None
 
+		if len(text_list) == 0: 
+			logger.error("No text found for video.")
+			text_list.append(" ")
 
 		audio_clips = []
 		for audio_url in audio_list:
