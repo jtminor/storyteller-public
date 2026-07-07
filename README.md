@@ -23,15 +23,31 @@ You should see the document instpector UI with options to Delete or Format a new
 
 #### Create a New Document
 
-In the Format Document panel, click Apply Format. This creates a new Story document in your Storyteller instance, formatted as a simple demo document about color. The inspector should load the visual representation of the document, as well as two tables, the Format Table and the Story Table.
+In the Format Document panel, click Apply Format. This creates a new Story document in your Storyteller instance, formatted as a simple demo document about color. The inspector should load the visual representation of the document's Format (graph), as well as two tables: the Format Table and the Story Table.
 
-#### Generate Content
+#### Generate Coordinated Content
+
+The demo document contains 4 pieces of content: a color, the color read aloud, an image of the color and a video combining these elements. The type and prompts for each of these pieces of content can be seen in the Fromat Table.
+
+Click Generate on the demo.video row to start generating the document's conent.
+
+Storyteller builds a semantic graph between the content based on their semantic dependency. So the audio of the color depends on the color's name being generated first. The video depends on all the other content existing, and so on. These relationships are shown visually on the graph.
 
 #### Content States and Updates
 
-#### Rebuild Content after Changes
+By now the demo should have progressed to where content has been requested and received. The inspector interfaces uses animation and color to indicate the state of the document's content. For example content which has been successfully generated will become green.
 
-#### Other Builtin Example Formats to Try
+The newly generated content can be seen in the Story table, which stores the actual "contents" of the document. First you should see the color name, then the audio and image, and finally the video. Click the preview button to open media urls.
+
+#### Collaborating with Content Agents
+
+Now lets change our initial color "by hand" and see the impact. Click on the text field in the Story Table containing the color name your model generated. Replace the color with "Aquamarine" and click Update.
+
+As the content updates, the content which "depends" on the color value becomes "Inavlid", as it no longer coordinates correctly with Aquamarine. Click generate on the video row. The Invalid nodes are regenerated, with now correct values and the video will be recreated with all new content, automatically by the system traversing the semantic graph.
+
+Each piece of Content in a Storyteller document is an Agent. It includes not just the content itself, but the prompts, model configurations, and memories of a unique LLM backed Agent. In combination with the semantic graph format system, this allows users and distributed agents to co-create documents and modify each others work.
+
+To learn more please see the system documentation below.
 
 ## Setup and Installation
 
